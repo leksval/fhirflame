@@ -42,9 +42,6 @@ tags:
 [![Project Website](https://huggingface.co/spaces/grasant/fhirflame/blob/main/index.html)](#)
 
 
-
-##  Gradio Hackathon Competition Categories
-
 ### **MCP Implementation**
 - **Official MCP Server** with 2 specialized healthcare tools
 - **Real-time Claude/GPT integration** for medical document processing
