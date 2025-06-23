@@ -42,24 +42,21 @@ tags:
 [![Project Website](https://huggingface.co/spaces/grasant/fhirflame/blob/main/index.html)](#)
 
 
-<video controls autoplay src="https://cdn-uploads.huggingface.co/production/uploads/67accf907dea95ed7d5f31b0/vwpe0tgdOeaHcJfHx9A-H.mp4"></video>
 
-<video controls autoplay src="https://cdn-uploads.huggingface.co/production/uploads/67accf907dea95ed7d5f31b0/pmjnYkBtYHMvLzgUKgzLg.mp4"></video>
+##  Gradio Hackathon Competition Categories
 
-## 🏅 Gradio Hackathon Competition Categories
-
-### 🥇 **Best MCP Implementation**
+### **MCP Implementation**
 - **Official MCP Server** with 2 specialized healthcare tools
 - **Real-time Claude/GPT integration** for medical document processing
 - **Agent-to-agent workflows** for complex medical scenarios
 
-### 🥈 **Innovative Healthcare Application**
+### **Innovative Healthcare Application**
 - **Multi-provider AI routing** (Ollama → Modal L4 → HuggingFace → Mistral)
 - **FHIR R4/R5 compliance engine** with 100% validation score and zero-dummy-data policy
 - **Real-time batch processing demo** with live dashboard integration
 - **Heavy workload demonstration** with 6-container orchestration
 
-### 🥉 **Best Agent Communication System**
+### **Agent Communication System**
 - **A2A API endpoints** for healthcare system integration
 - **Real-time medical workflows** between specialized agents
 - **Production-ready architecture** for hospital environments
