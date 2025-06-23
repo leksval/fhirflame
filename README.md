@@ -14,7 +14,7 @@
 [![FHIR R4/R5](https://img.shields.io/badge/🏥-FHIR_Compliant-FFFFFF?style=for-the-badge&labelColor=DC143C)](#)
 
 ---
-[![Project Website](https://leksval.github.io/fhirflame/)](#)
+[![Project Website](https://leksval.github.io/fhirflame/index.html)](#)
 
 
 ### **MCP Implementation**
