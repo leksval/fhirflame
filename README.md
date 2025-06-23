@@ -1,29 +1,4 @@
----
-title: FhirFlame - Medical AI Platform MVP
-emoji: 🔥
-colorFrom: red
-colorTo: gray
-sdk: gradio
-sdk_version: 5.33.1
-app_file: app.py
-pinned: false
-license: apache-2.0
-short_description: Medical AI Data processing Tool
-tags:
-- mcp-server-track
-- agent-demo-track
-- healthcare-demo
-- fhir-prototype
-- medical-ai-mvp
-- technology-demonstration
-- prototype
-- mvp
-- demo-only
-- hackathon-submission
----
-
 # 🔥 FhirFlame: Medical AI Data processing Tool
-## 🚧 MVP/Prototype Platform | Hackathon Submission
 
 > **⚠️ IMPORTANT DISCLAIMER - DEMO/MVP ONLY**
 > This is a **technology demonstration and MVP prototype** for development, testing, and educational purposes only.
