@@ -1,0 +1,66 @@
+**Patient: Sarah Johnson, DOB: 03/15/1978, MRN: 12345678**
+
+**CHIEF COMPLAINT:** Chest pain and shortness of breath
+
+**HISTORY OF PRESENT ILLNESS:**
+Sarah Johnson is a 45-year-old female who presents to the emergency department with acute onset chest pain that began approximately 2 hours ago. The patient describes the pain as sharp, substernal, radiating to her left arm and jaw. She rates the pain as 8/10 in intensity. The patient also reports associated shortness of breath, diaphoresis, and nausea. No recent trauma or exertion prior to symptom onset.
+
+**PAST MEDICAL HISTORY:**
+- Hypertension diagnosed 2019
+- Type 2 Diabetes Mellitus since 2020  
+- Hyperlipidemia
+- Family history of coronary artery disease (father deceased at age 58 from myocardial infarction)
+
+**MEDICATIONS:**
+- Lisinopril 10mg daily
+- Metformin 1000mg twice daily
+- Atorvastatin 40mg daily
+- Aspirin 81mg daily
+
+**ALLERGIES:** Penicillin (causes rash)
+
+**SOCIAL HISTORY:** 
+Former smoker (quit 5 years ago, 20 pack-year history). Drinks alcohol socially. Works as an accountant.
+
+**VITAL SIGNS:**
+- Temperature: 98.6°F (37°C)
+- Blood Pressure: 165/95 mmHg
+- Heart Rate: 102 bpm
+- Respiratory Rate: 22/min
+- Oxygen Saturation: 96% on room air
+
+**PHYSICAL EXAMINATION:**
+GENERAL: Alert, oriented, appears anxious and in moderate distress
+CARDIOVASCULAR: Tachycardic, regular rhythm, no murmurs, rubs, or gallops
+PULMONARY: Bilateral breath sounds clear, no wheezes or rales
+ABDOMEN: Soft, non-tender, no organomegaly
+
+**DIAGNOSTIC TESTS:**
+- ECG: ST-elevation in leads II, III, aVF consistent with inferior STEMI
+- Troponin I: 15.2 ng/mL (elevated, normal <0.04)
+- CK-MB: 45 U/L (elevated)
+- CBC: WBC 12,500, Hgb 13.2, Plt 285,000
+- BMP: Glucose 180 mg/dL, Creatinine 1.1 mg/dL
+
+**ASSESSMENT AND PLAN:**
+45-year-old female with acute ST-elevation myocardial infarction (STEMI) involving the inferior wall.
+
+1. **Acute STEMI** - Patient meets criteria for urgent cardiac catheterization
+   - Emergent cardiac catheterization and PCI
+   - Dual antiplatelet therapy: Aspirin 325mg + Clopidogrel 600mg loading dose
+   - Heparin per protocol
+   - Metoprolol 25mg BID when hemodynamically stable
+
+2. **Diabetes management** - Continue home Metformin, monitor glucose closely
+
+3. **Hypertension** - Hold Lisinopril temporarily, restart when stable
+
+**DISPOSITION:** Patient transferred to cardiac catheterization lab for emergent intervention.
+
+**FOLLOW-UP:** Cardiology consultation, diabetes education, smoking cessation counseling
+
+---
+Dr. Michael Chen, MD
+Emergency Medicine
+General Hospital
+Date: 06/10/2025, Time: 14:30

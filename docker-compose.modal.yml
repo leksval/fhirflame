@@ -1,0 +1,203 @@
+services:
+  # FhirFlame with Modal L4 GPU integration + A2A API
+  fhirflame-modal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fhirflame-modal:latest
+    container_name: fhirflame-modal
+    ports:
+      - "${GRADIO_PORT:-7860}:7860"  # Gradio UI
+    environment:
+      - PYTHONPATH=/app
+      - GRADIO_SERVER_NAME=0.0.0.0
+      - DEPLOYMENT_TARGET=modal
+      # Modal Configuration
+      - ENABLE_MODAL_SCALING=${ENABLE_MODAL_SCALING:-true}
+      - MODAL_TOKEN_ID=${MODAL_TOKEN_ID}
+      - MODAL_TOKEN_SECRET=${MODAL_TOKEN_SECRET}
+      - MODAL_ENDPOINT_URL=${MODAL_ENDPOINT_URL}
+      - MODAL_L4_HOURLY_RATE=${MODAL_L4_HOURLY_RATE:-0.73}
+      - MODAL_PLATFORM_FEE=${MODAL_PLATFORM_FEE:-15}
+      # Environment
+      - FHIRFLAME_DEV_MODE=${FHIRFLAME_DEV_MODE:-false}
+      - FHIR_VERSION=${FHIR_VERSION:-R4}
+      - ENABLE_HIPAA_LOGGING=${ENABLE_HIPAA_LOGGING:-true}
+      # API Keys (from .env)
+      - HF_TOKEN=${HF_TOKEN}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      # Fallback Configuration
+      - USE_MISTRAL_FALLBACK=${USE_MISTRAL_FALLBACK:-true}
+      - USE_MULTIMODAL_FALLBACK=${USE_MULTIMODAL_FALLBACK:-true}
+      # Auth0 for production (optional)
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN:-}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE:-}
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./logs:/app/logs
+      - ./.env:/app/.env
+    networks:
+      - fhirflame-modal
+    command: python frontend_ui.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # A2A API Server with Modal integration
+  fhirflame-a2a-modal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fhirflame-modal:latest
+    container_name: fhirflame-a2a-modal
+    ports:
+      - "${A2A_API_PORT:-8000}:8000"  # A2A API
+    environment:
+      - PYTHONPATH=/app
+      - FHIRFLAME_DEV_MODE=${FHIRFLAME_DEV_MODE:-false}
+      - FHIRFLAME_API_KEY=${FHIRFLAME_API_KEY:-fhirflame-modal-key}
+      - PORT=8000
+      # Auth0 Configuration for production
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN:-}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE:-}
+      # Modal Integration
+      - MODAL_TOKEN_ID=${MODAL_TOKEN_ID}
+      - MODAL_TOKEN_SECRET=${MODAL_TOKEN_SECRET}
+      - MODAL_ENDPOINT_URL=${MODAL_ENDPOINT_URL}
+    volumes:
+      - ./src:/app/src
+      - ./.env:/app/.env
+    networks:
+      - fhirflame-modal
+    command: python -c "from src.mcp_a2a_api import app; import uvicorn; uvicorn.run(app, host='0.0.0.0', port=8000)"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Modal deployment service
+  modal-deployer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fhirflame-modal:latest
+    container_name: modal-deployer
+    environment:
+      - PYTHONPATH=/app
+      - MODAL_TOKEN_ID=${MODAL_TOKEN_ID}
+      - MODAL_TOKEN_SECRET=${MODAL_TOKEN_SECRET}
+    volumes:
+      - ./modal:/app/modal
+      - ./.env:/app/.env
+    networks:
+      - fhirflame-modal
+    working_dir: /app
+    command: >
+      sh -c "
+        echo '🚀 Deploying Modal L4 GPU functions...' &&
+        python modal/deploy.py --a2a &&
+        echo '✅ Modal deployment complete!'
+      "
+    profiles:
+      - deploy
+
+  # HuggingFace fallback service (local backup)
+  hf-fallback:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fhirflame-modal:latest
+    container_name: hf-fallback
+    environment:
+      - PYTHONPATH=/app
+      - HF_TOKEN=${HF_TOKEN}
+      - DEPLOYMENT_TARGET=huggingface
+    volumes:
+      - ./src:/app/src
+      - ./.env:/app/.env
+    networks:
+      - fhirflame-modal
+    command: python -c "print('HuggingFace fallback ready')"
+    profiles:
+      - fallback
+
+  # Test runner for Modal integration
+  test-modal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fhirflame-modal:latest
+    container_name: fhirflame-modal-tests
+    environment:
+      - PYTHONPATH=/app
+      - MODAL_TOKEN_ID=${MODAL_TOKEN_ID}
+      - MODAL_TOKEN_SECRET=${MODAL_TOKEN_SECRET}
+      - FHIRFLAME_DEV_MODE=true
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./test_results:/app/test_results
+      - ./.env:/app/.env
+    networks:
+      - fhirflame-modal
+    depends_on:
+      - fhirflame-a2a-modal
+    command: python tests/test_modal_scaling.py
+    profiles:
+      - test
+
+  # Langfuse Database for monitoring
+  langfuse-db:
+    image: postgres:15
+    container_name: langfuse-db-modal
+    environment:
+      - POSTGRES_DB=langfuse
+      - POSTGRES_USER=langfuse
+      - POSTGRES_PASSWORD=langfuse
+    volumes:
+      - langfuse_db_data:/var/lib/postgresql/data
+    networks:
+      - fhirflame-modal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U langfuse -d langfuse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Langfuse for comprehensive monitoring
+  langfuse:
+    image: langfuse/langfuse:latest
+    container_name: langfuse-modal
+    depends_on:
+      langfuse-db:
+        condition: service_healthy
+    ports:
+      - "${LANGFUSE_PORT:-3000}:3000"
+    environment:
+      - DATABASE_URL=postgresql://langfuse:langfuse@langfuse-db:5432/langfuse
+      - NEXTAUTH_SECRET=mysecret
+      - SALT=mysalt
+      - NEXTAUTH_URL=http://localhost:3000
+      - TELEMETRY_ENABLED=${TELEMETRY_ENABLED:-true}
+      - NEXT_PUBLIC_SIGN_UP_DISABLED=${NEXT_PUBLIC_SIGN_UP_DISABLED:-false}
+      - LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES=${LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES:-false}
+    networks:
+      - fhirflame-modal
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/public/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  fhirflame-modal:
+    driver: bridge
+
+volumes:
+  langfuse_db_data:

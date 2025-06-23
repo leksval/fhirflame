@@ -1,0 +1,25 @@
+{
+  "resourceType": "Patient",
+  "id": "example-r4",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2023-01-01T00:00:00Z"
+  },
+  "identifier": [
+    {
+      "system": "http://example.org/patient-ids",
+      "value": "12345"
+    }
+  ],
+  "name": [
+    {
+      "family": "Doe",
+      "given": [
+        "John",
+        "Q."
+      ]
+    }
+  ],
+  "gender": "male",
+  "birthDate": "1980-01-01"
+}

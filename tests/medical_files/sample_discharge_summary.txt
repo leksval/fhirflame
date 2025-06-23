@@ -1,0 +1,38 @@
+
+DISCHARGE SUMMARY
+
+Patient: John Smith
+DOB: 1975-03-15
+MRN: MR123456789
+Admission Date: 2024-01-15
+Discharge Date: 2024-01-18
+
+CHIEF COMPLAINT:
+Chest pain and shortness of breath
+
+HISTORY OF PRESENT ILLNESS:
+45-year-old male presents with acute onset chest pain radiating to left arm.
+Associated with diaphoresis and nausea. No prior cardiac history.
+
+VITAL SIGNS:
+Blood Pressure: 145/95 mmHg
+Heart Rate: 102 bpm
+Temperature: 98.6°F
+Oxygen Saturation: 96% on room air
+
+ASSESSMENT AND PLAN:
+1. Acute coronary syndrome - rule out myocardial infarction
+2. Hypertension - new diagnosis
+3. Start aspirin 325mg daily
+4. Lisinopril 10mg daily for blood pressure control
+5. Atorvastatin 40mg daily
+
+MEDICATIONS PRESCRIBED:
+- Aspirin 325mg daily
+- Lisinopril 10mg daily
+- Atorvastatin 40mg daily
+- Nitroglycerin 0.4mg sublingual PRN chest pain
+
+FOLLOW-UP:
+Cardiology in 1 week
+Primary care in 2 weeks

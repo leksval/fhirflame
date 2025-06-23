@@ -1,0 +1,27 @@
+
+RADIOLOGY REPORT
+
+Patient: Robert Wilson
+DOB: 1980-12-10
+MRN: MR456789123
+Exam Date: 2024-01-22
+Exam Type: Chest X-Ray PA and Lateral
+
+CLINICAL INDICATION:
+Cough and fever
+
+TECHNIQUE:
+PA and lateral chest radiographs were obtained.
+
+FINDINGS:
+The lungs are well expanded and clear. No focal consolidation, 
+pleural effusion, or pneumothorax is identified. The cardiac 
+silhouette is normal in size and contour. The mediastinal 
+contours are within normal limits. No acute bony abnormalities.
+
+IMPRESSION:
+Normal chest radiograph. No evidence of acute cardiopulmonary disease.
+
+Electronically signed by:
+Dr. Sarah Johnson, MD
+Radiologist

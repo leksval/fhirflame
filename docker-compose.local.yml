@@ -1,0 +1,223 @@
+services:
+  # FhirFlame Local with Ollama + A2A API
+  fhirflame-local:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fhirflame-local:latest
+    container_name: fhirflame-local
+    ports:
+      - "${GRADIO_PORT:-7860}:7860"  # Gradio UI
+    environment:
+      - PYTHONPATH=/app
+      - GRADIO_SERVER_NAME=0.0.0.0
+      - DEPLOYMENT_TARGET=local
+      # Ollama Configuration
+      - USE_REAL_OLLAMA=${USE_REAL_OLLAMA:-true}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://ollama:11434}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-codellama:13b-instruct}
+      # Environment
+      - FHIRFLAME_DEV_MODE=${FHIRFLAME_DEV_MODE:-true}
+      - FHIR_VERSION=${FHIR_VERSION:-R4}
+      - ENABLE_HIPAA_LOGGING=${ENABLE_HIPAA_LOGGING:-true}
+      # API Keys (from .env)
+      - HF_TOKEN=${HF_TOKEN}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      # Fallback Configuration
+      - USE_MISTRAL_FALLBACK=${USE_MISTRAL_FALLBACK:-true}
+      - USE_MULTIMODAL_FALLBACK=${USE_MULTIMODAL_FALLBACK:-true}
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./logs:/app/logs
+      - ./.env:/app/.env
+      - ./frontend_ui.py:/app/frontend_ui.py
+      - ./app.py:/app/app.py
+    depends_on:
+      ollama:
+        condition: service_healthy
+    networks:
+      - fhirflame-local
+    command: python app.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # A2A API Server for service integration
+  fhirflame-a2a-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fhirflame-local:latest
+    container_name: fhirflame-a2a-api
+    ports:
+      - "${A2A_API_PORT:-8000}:8000"  # A2A API
+    environment:
+      - PYTHONPATH=/app
+      - FHIRFLAME_DEV_MODE=${FHIRFLAME_DEV_MODE:-true}
+      - FHIRFLAME_API_KEY=${FHIRFLAME_API_KEY:-fhirflame-dev-key}
+      - PORT=${A2A_API_PORT:-8000}
+      # Disable Auth0 for local development
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN:-}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE:-}
+    volumes:
+      - ./src:/app/src
+      - ./.env:/app/.env
+    networks:
+      - fhirflame-local
+    command: python -c "from src.mcp_a2a_api import app; import uvicorn; uvicorn.run(app, host='0.0.0.0', port=8000)"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Ollama for local AI processing
+  ollama:
+    image: ollama/ollama:latest
+    container_name: fhirflame-ollama-local
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - ollama_local_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=${OLLAMA_HOST:-0.0.0.0}
+      - OLLAMA_ORIGINS=${OLLAMA_ORIGINS:-*}
+    networks:
+      - fhirflame-local
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    # GPU support (uncomment if NVIDIA GPU available)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    # Comment out the deploy section above if no GPU available
+
+  # Ollama model downloader
+  ollama-model-downloader:
+    image: ollama/ollama:latest
+    container_name: ollama-model-downloader
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - ollama_local_data:/root/.ollama
+    networks:
+      - fhirflame-local
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "echo '🦙 Downloading CodeLlama model for local processing...' &&
+       ollama pull codellama:13b-instruct &&
+       echo '✅ CodeLlama 13B model downloaded and ready for medical processing!'"
+    restart: "no"
+
+  # Langfuse Database for monitoring
+  langfuse-db:
+    image: postgres:15
+    container_name: langfuse-db-local
+    environment:
+      - POSTGRES_DB=langfuse
+      - POSTGRES_USER=langfuse
+      - POSTGRES_PASSWORD=langfuse
+    volumes:
+      - langfuse_db_data:/var/lib/postgresql/data
+    networks:
+      - fhirflame-local
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U langfuse -d langfuse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ClickHouse for Langfuse v3
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse-local
+    environment:
+      - CLICKHOUSE_DB=langfuse
+      - CLICKHOUSE_USER=langfuse
+      - CLICKHOUSE_PASSWORD=langfuse
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    networks:
+      - fhirflame-local
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Langfuse for comprehensive monitoring
+  langfuse:
+    image: langfuse/langfuse:2
+    container_name: langfuse-local
+    depends_on:
+      langfuse-db:
+        condition: service_healthy
+    ports:
+      - "${LANGFUSE_PORT:-3000}:3000"
+    environment:
+      - DATABASE_URL=postgresql://langfuse:langfuse@langfuse-db:5432/langfuse
+      - LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES=false
+      - NEXTAUTH_SECRET=mysecret
+      - SALT=mysalt
+      - NEXTAUTH_URL=http://localhost:3000
+      - TELEMETRY_ENABLED=${TELEMETRY_ENABLED:-true}
+      - NEXT_PUBLIC_SIGN_UP_DISABLED=${NEXT_PUBLIC_SIGN_UP_DISABLED:-false}
+      - LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES=${LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES:-false}
+    networks:
+      - fhirflame-local
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/public/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Test runner service
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fhirflame-local:latest
+    container_name: fhirflame-tests
+    environment:
+      - PYTHONPATH=/app
+      - FHIRFLAME_DEV_MODE=${FHIRFLAME_DEV_MODE:-true}
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./test_results:/app/test_results
+      - ./.env:/app/.env
+    networks:
+      - fhirflame-local
+    depends_on:
+      - fhirflame-a2a-api
+      - ollama
+    command: python tests/test_file_organization.py
+    profiles:
+      - test
+
+networks:
+  fhirflame-local:
+    driver: bridge
+
+volumes:
+  ollama_local_data:
+  langfuse_db_data:
+  clickhouse_data:

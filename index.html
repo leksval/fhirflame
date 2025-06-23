@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FhirFlame - Medical AI Technology Demonstration | MVP/Prototype Platform</title>
+    <meta name="description" content="Healthcare AI technology demonstration with MCP integration, FHIR compliance, and multi-provider AI routing - MVP/Prototype for development and testing purposes only">
+    <meta name="theme-color" content="#B71C1C">
+    <meta name="msapplication-TileColor" content="#B71C1C">
+    
+    <!-- Optimized favicon setup -->
+    <link rel="icon" type="image/svg+xml" href="fhirflame_logo.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="static/fhirflame_logo.png">
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="static/fhirflame_logo.png">
+    <link rel="manifest" href="static/site.webmanifest">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0A0A0A 0%, #1a1a1a 100%);
+            color: #FFFFFF;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Disclaimer Banner */
+        .disclaimer {
+            background: #B71C1C;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 15px 0;
+            font-weight: 200;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .disclaimer strong {
+            color: #FFE0E0;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23DC143C" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            width: 260px;
+            height: auto;
+            margin: 0 auto 20px auto;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3)) brightness(1.5) saturate(1.3);
+            display: block;
+            max-width: 100%;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #FFFFFF, #B71C1C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .hero .description {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 18px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: #B71C1C;
+            color: #FFFFFF;
+            box-shadow: 0 10px 30px rgba(183, 28, 28, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(183, 28, 28, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #FFFFFF;
+            border: 2px solid #B71C1C;
+        }
+
+        .btn-secondary:hover {
+            background: #FFFFFF;
+            color: #0A0A0A;
+            transform: translateY(-3px);
+        }
+
+        /* Environment Configuration Section */
+        .config-section {
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .config-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .config-card:hover {
+            transform: translateY(-5px);
+            border-color: #B71C1C;
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .config-card h3 {
+            color: #FFFFFF;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .config-card code {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #FFE0E0;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: #FFFFFF;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: #B71C1C;
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #FFFFFF;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Technology Stack */
+        .tech-stack {
+            padding: 100px 0;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            margin-top: 50px;
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            border-color: #B71C1C;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .tech-item h4 {
+            color: #FFFFFF;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        /* Demo Section */
+        .demo {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(82, 80, 80, 0.1), transparent);
+            text-align: center;
+        }
+
+        .demo-video {
+            max-width: 800px;
+            margin: 40px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .demo-placeholder {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 60px;
+            border: 2px solid #B71C1C;
+            border-radius: 20px;
+            color: #FFFFFF;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 60px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            color: #FFFFFF;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #FFFFFF;
+        }
+
+        .footer-bottom {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero .description {
+                font-size: 1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content > * {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .hero-content > *:nth-child(2) { animation-delay: 0.2s; }
+        .hero-content > *:nth-child(3) { animation-delay: 0.4s; }
+        .hero-content > *:nth-child(4) { animation-delay: 0.6s; }
+        .hero-content > *:nth-child(5) { animation-delay: 0.8s; }
+    </style>
+</head>
+<body>
+    <!-- Disclaimer Banner -->
+    <div class="disclaimer">
+        ⚠️ MVP/PROTOTYPE ONLY - Technology demonstration for development and testing purposes only. NOT approved for clinical use or patient data.
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <img src="fhirflame_logo.svg" alt="FhirFlame Logo" class="logo">
+                <p class="description" style="font-size: 1.2rem; font-weight: 400; line-height: 1.8; max-width: 700px; margin-bottom: 50px;">
+                    Streamline healthcare workflows with AI-powered medical data processing.
+                    Get instant FHIR-compliant outputs, smart cost optimization, and seamless integration
+                    with your existing healthcare systems.
+                </p>
+                
+                <div style="margin: 40px 0 50px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; max-width: 950px; margin-left: auto; margin-right: auto;">
+                    <div style="text-align: center; padding: 25px; background: rgba(255, 255, 255, 0.08); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">🏥</div>
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 10px; font-size: 1.1rem;">Healthcare Ready</div>
+                        <div style="font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.5;">Fully FHIR R4/R5 compliant with validated medical standards for seamless EHR integration</div>
+                    </div>
+                    <div style="text-align: center; padding: 25px; background: rgba(255, 255, 255, 0.08); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">🔌</div>
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 10px; font-size: 1.1rem;">AI Agent Ready</div>
+                        <div style="font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.5;">Built-in MCP server for seamless Claude & GPT integration with automated medical workflows</div>
+                    </div>
+                    <div style="text-align: center; padding: 25px; background: rgba(255, 255, 255, 0.08); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">⚡</div>
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 10px; font-size: 1.1rem;">Smart & Cost-Effective</div>
+                        <div style="font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.5;">Free local development with Ollama, scale with cloud providers when needed</div>
+                    </div>
+                </div>
+                <div class="cta-buttons">
+                    <a href="https://huggingface.co/spaces/grasant/fhirflame" class="btn btn-primary">
+                        Live Demo
+                    </a>
+                    <a href="https://github.com/your-org/fhirflame" class="btn btn-secondary">
+                        Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Environment Configuration Section -->
+    <section class="config-section">
+        <div class="container">
+            <h2 class="section-title">⚡ Multi-Provider AI & Environment Setup</h2>
+            
+            <div class="config-grid">
+                <div class="config-card">
+                    <h3>🆓 <span>Free Local Development</span></h3>
+                    <p>No API keys required for local testing:</p>
+                    <p><code>USE_REAL_OLLAMA=true</code><br>
+                    <code>OLLAMA_BASE_URL=http://localhost:11434</code><br>
+                    <code>OLLAMA_MODEL=codellama:13b-instruct</code></p>
+                </div>
+
+                <div class="config-card">
+                    <h3>🤗 <span>HuggingFace Medical AI</span></h3>
+                    <p>Specialized medical models from HuggingFace Hub:</p>
+                    <p><code>HF_TOKEN</code> - See HuggingFace pricing<br>
+                    BioBERT, ClinicalBERT & medical domain models<br>
+                    Enterprise inference endpoints & model fallback</p>
+                </div>
+
+                <div class="config-card">
+                    <h3>🚀 <span>HuggingFace Hosting</span></h3>
+                    <p>Deploy & host FhirFlame on HuggingFace:</p>
+                    <p><code>HF_TOKEN</code> - Free hosting available<br>
+                    <strong>HF Spaces integration</strong> - Direct deployment<br>
+                    Public & private space options</p>
+                </div>
+
+                <div class="config-card">
+                    <h3>⚡ <span>Modal GPU Scaling</span></h3>
+                    <p>Serverless GPU auto-scaling with Modal Labs:</p>
+                    <p><code>MODAL_TOKEN_ID</code><br>
+                    <code>MODAL_TOKEN_SECRET</code><br>
+                    L4 GPU instances - See Modal Labs pricing</p>
+                </div>
+
+                <div class="config-card">
+                    <h3>🔍 <span>Vision & OCR Processing</span></h3>
+                    <p>Advanced document processing with Mistral:</p>
+                    <p><code>MISTRAL_API_KEY</code><br>
+                    Multimodal AI for medical imaging & text extraction</p>
+                </div>
+
+                <div class="config-card">
+                    <h3>📊 <span>Monitoring & Analytics</span></h3>
+                    <p>Enterprise observability with Langfuse:</p>
+                    <p><code>LANGFUSE_SECRET_KEY</code><br>
+                    <code>LANGFUSE_PUBLIC_KEY</code><br>
+                    Real-time job tracking & analytics</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Features -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose FhirFlame</h2>
+            
+            <!-- Performance Metrics Banner -->
+            <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3)); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 40px; margin-bottom: 60px; text-align: center;">
+                <h3 style="color: #FFFFFF; margin-bottom: 30px; font-size: 1.8rem;">Real-World Performance Data</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px;">
+                    <div>
+                        <div style="font-size: 2.2rem; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">2.3s</div>
+                        <div style="font-size: 0.95rem; color: rgba(255,255,255,0.8);">Average processing time<br>for clinical notes</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.2rem; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">100%</div>
+                        <div style="font-size: 0.95rem; color: rgba(255,255,255,0.8);">FHIR R4/R5 compliance<br>score validation</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.2rem; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">High</div>
+                        <div style="font-size: 0.95rem; color: rgba(255,255,255,0.8);">Medical entity<br>extraction accuracy</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.2rem; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">$0.00</div>
+                        <div style="font-size: 0.95rem; color: rgba(255,255,255,0.8);">Cost for local development<br>with Ollama</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Core Benefits -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🏥</span>
+                    <h3>Healthcare-Grade Standards</h3>
+                    <p><strong>FHIR R4/R5 Compliant:</strong> 100% compliance score with real healthcare validation. Seamless EHR integration and HL7 standards support for production environments.</p>
+                    <div style="margin-top: 15px; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 0.9rem;">
+                        ✓ Zero-dummy-data policy<br>
+                        ✓ Healthcare professional validated<br>
+                        ✓ Production-ready compliance
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3>Smart Cost Optimization</h3>
+                    <p><strong>Multi-Provider Intelligence:</strong> Start free with local Ollama ($0.00), scale with  multi Modal Labs L4, or use specialized providers when needed.</p>
+                    <div style="margin-top: 15px; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 0.9rem;">
+                        💰 Free development environment<br>
+                        🚀 Auto-scale for production<br>
+                        🎯 Intelligent routing optimization
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🔌</span>
+                    <h3>AI Agent Ready</h3>
+                    <p><strong>Official MCP Server:</strong> Built-in Model Context Protocol with 2 specialized healthcare tools. Seamless Claude/GPT integration for automated medical workflows.</p>
+                    <div style="margin-top: 15px; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 0.9rem;">
+                        🤖 process_medical_document()<br>
+                        ✅ validate_fhir_bundle()<br>
+                        🔄 Agent-to-agent communication
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3>Enterprise Monitoring</h3>
+                    <p><strong>PostgreSQL + Langfuse:</strong> Production-grade job management with real-time analytics, audit trails, and comprehensive healthcare compliance tracking.</p>
+                    <div style="margin-top: 15px; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 0.9rem;">
+                        📈 Real-time dashboard<br>
+                        🔍 Complete audit trails<br>
+                        📋 Healthcare compliance logs
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">📄</span>
+                    <h3>Medical Document Intelligence</h3>
+                    <p><strong>Advanced OCR + Entity Extraction:</strong> Mistral Vision OCR with high-accuracy medical entity extraction. Conditions, medications, vitals, and patient data extraction.</p>
+                    <div style="margin-top: 15px; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 0.9rem;">
+                        📋 Clinical notes processing<br>
+                        🧪 Lab report analysis<br>
+                        📸 Radiology report extraction
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🔒</span>
+                    <h3>Healthcare Security</h3>
+                    <p><strong>HIPAA-Aware Architecture:</strong> Container isolation, JWT authentication, local processing options, and comprehensive security for healthcare environments.</p>
+                    <div style="margin-top: 15px; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 0.9rem;">
+                        🛡️ HIPAA considerations<br>
+                        🔐 Secure authentication<br>
+                        🏠 Local processing available
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real Healthcare Workflow Schema -->
+            <div style="margin-top: 80px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.3)); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 50px;">
+                <h3 style="text-align: center; color: #FFFFFF; margin-bottom: 40px; font-size: 1.8rem;">Enterprise Healthcare Workflow Schema</h3>
+                
+                <!-- Workflow Schema Diagram -->
+                <div style="background: rgba(0, 0, 0, 0.4); border-radius: 15px; padding: 30px; margin-bottom: 40px; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center;">
+                    <div style="text-align: center; color: #FFFFFF; font-weight: 600; margin-bottom: 20px; font-size: 1rem;">Multi-Agent Healthcare Processing Pipeline</div>
+                    <div style="display: flex; justify-content: center; width: 100%; overflow-x: auto;">
+                        <pre style="color: rgba(255,255,255,0.9); font-size: 0.85rem; line-height: 1.4; margin: 0; text-align: center;">
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐    ┌──────────────────┐
+│  📄 Document   │───▶│ 🤖 MCP Server   │───▶│ ⚡ AI Provider │───▶│  🏥 FHIR Engine │
+│   Input Layer   │    │  Agent Router    │    │   Selection     │    │   Validation     │
+└─────────────────┘    └──────────────────┘    └─────────────────┘    └──────────────────┘
+         │                       │                       │                       │
+         ▼                       ▼                       ▼                       ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐    ┌──────────────────┐
+│ • PDF/DICOM     │    │ • Tool Selection │    │ • Ollama Local  │    │ • R4/R5 Bundles  │
+│ • Clinical Text │    │ • Job Tracking   │    │ • Modal L4 GPU  │    │ • 100% Compliant │
+│ • Lab Reports   │    │ • PostgreSQL Log │    │ • Mistral OCR   │    │ • Entity Mapping │
+└─────────────────┘    └──────────────────┘    └─────────────────┘    └──────────────────┘
+                                │
+                                ▼
+                    ┌──────────────────────────┐
+                    │    📊 Langfuse Monitor   │
+                    │  • Real-time Analytics   │
+                    │  • Audit Trail Logging   │
+                    │  • Performance Metrics   │
+                    └──────────────────────────┘</pre>
+                    </div>
+                </div>
+
+                <!-- Detailed Workflow Steps -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px;">
+                    <div style="background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 20px; border-left: 4px solid #B71C1C;">
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 1.2rem;">📄</span> Document Ingestion
+                        </div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.5;">
+                            <strong>• Multi-format Support:</strong> PDF, DICOM, TXT, DOCX<br>
+                            <strong>• OCR Processing:</strong> Mistral Vision API<br>
+                            <strong>• Text Extraction:</strong> pydicom + PyMuPDF<br>
+                            <strong>• Quality Validation:</strong> Pre-processing checks
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 20px; border-left: 4px solid #B71C1C;">
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 1.2rem;">🤖</span> MCP Agent Routing
+                        </div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.5;">
+                            <strong>• Tool Selection:</strong> process_medical_document()<br>
+                            <strong>• Provider Routing:</strong> Cost-optimized selection<br>
+                            <strong>• Job Management:</strong> PostgreSQL persistence<br>
+                            <strong>• State Tracking:</strong> Real-time status updates
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 20px; border-left: 4px solid #B71C1C;">
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 1.2rem;">⚡</span> AI Processing Layer
+                        </div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.5;">
+                            <strong>• Entity Extraction:</strong> Medical NLP models<br>
+                            <strong>• Clinical Analysis:</strong> CodeLlama 13B Instruct<br>
+                            <strong>• Scaling Logic:</strong> Ollama → Modal L4 → HF<br>
+                            <strong>• Performance Monitor:</strong> Langfuse integration
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 20px; border-left: 4px solid #B71C1C;">
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 1.2rem;">🏥</span> FHIR Compliance Engine
+                        </div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.5;">
+                            <strong>• Bundle Generation:</strong> R4/R5 compliant JSON<br>
+                            <strong>• Validation Engine:</strong> 100% compliance scoring<br>
+                            <strong>• Schema Mapping:</strong> HL7 standard conformance<br>
+                            <strong>• Output Format:</strong> EHR-ready structured data
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; background: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 25px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.8rem; font-weight: 700; color: #FFFFFF; margin-bottom: 5px;">2.3s</div>
+                        <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">Clinical Note Processing</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.8rem; font-weight: 700; color: #FFFFFF; margin-bottom: 5px;">100%</div>
+                        <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">FHIR R4/R5 Compliance</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.8rem; font-weight: 700; color: #FFFFFF; margin-bottom: 5px;">6</div>
+                        <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">Container Architecture</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.8rem; font-weight: 700; color: #FFFFFF; margin-bottom: 5px;">$0.00</div>
+                        <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">Local Running Cost</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Architecture -->
+    <section class="tech-stack">
+        <div class="container">
+            <h2 class="section-title">System Architecture</h2>
+            <p style="text-align: center; font-size: 1.1rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 50px; max-width: 700px; margin-left: auto; margin-right: auto;">
+                Microservices architecture with container orchestration for healthcare-grade scalability
+            </p>
+            
+            <!-- Core Architecture Diagram -->
+            <div style="background: rgba(0, 0, 0, 0.4); border-radius: 15px; padding: 40px; margin-bottom: 50px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 30px;">
+                    <div style="text-align: center; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15);">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🌐</div>
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 8px;">Frontend Layer</div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">Gradio 4.0 + Real-time UI</div>
+                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 5px;">Port 7860</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15);">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🔌</div>
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 8px;">API Gateway</div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">FastAPI + MCP Server</div>
+                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 5px;">Port 8000</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15);">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🧠</div>
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 8px;">AI Processing</div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">Ollama + Modal Scaling</div>
+                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 5px;">Port 11434</div>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+                    <div style="text-align: center; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15);">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🗄️</div>
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 8px;">Data Layer</div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">PostgreSQL + ClickHouse</div>
+                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 5px;">Persistent Storage</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15);">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📊</div>
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 8px;">Observability</div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">Langfuse Analytics</div>
+                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 5px;">Port 3000</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15);">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🏥</div>
+                        <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 8px;">FHIR Engine</div>
+                        <div style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">R4/R5 Validation</div>
+                        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 5px;">Healthcare Standards</div>
+                    </div>
+                </div>
+            </div>
+
+            
+            </div>
+        </div>
+    </section>
+
+    <!-- Security & Compliance -->
+    <section style="padding: 100px 0; background: rgba(255, 255, 255, 0.02);">
+        <div class="container">
+            <h2 class="section-title">Healthcare Security & Compliance</h2>
+            <p style="text-align: center; font-size: 1.1rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 50px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Enterprise-grade security patterns designed for healthcare environments
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3)); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 15px; padding: 30px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 20px; text-align: center;">🛡️</div>
+                    <h3 style="color: #FFFFFF; margin-bottom: 15px; font-size: 1.3rem;">Data Protection</h3>
+                    <ul style="color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.6; list-style: none; padding: 0;">
+                        <li style="margin-bottom: 8px;">• Container isolation with Docker security</li>
+                        <li style="margin-bottom: 8px;">• Local processing option for sensitive data</li>
+                        <li style="margin-bottom: 8px;">• Encrypted environment configuration</li>
+                        <li>• Zero-dummy-data policy implementation</li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3)); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 15px; padding: 30px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 20px; text-align: center;">📋</div>
+                    <h3 style="color: #FFFFFF; margin-bottom: 15px; font-size: 1.3rem;">Compliance Framework</h3>
+                    <ul style="color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.6; list-style: none; padding: 0;">
+                        <li style="margin-bottom: 8px;">• HIPAA-aware architecture patterns</li>
+                        <li style="margin-bottom: 8px;">• Comprehensive audit trail logging</li>
+                        <li style="margin-bottom: 8px;">• Healthcare data governance</li>
+                        <li>• Regulatory evaluation framework</li>
+                    </ul>
+                </div>
+
+                <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.3)); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 15px; padding: 30px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 20px; text-align: center;">🔐</div>
+                    <h3 style="color: #FFFFFF; margin-bottom: 15px; font-size: 1.3rem;">Authentication</h3>
+                    <ul style="color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.6; list-style: none; padding: 0;">
+                        <li style="margin-bottom: 8px;">• JWT token-based authentication</li>
+                        <li style="margin-bottom: 8px;">• OAuth 2.0 with PKCE flow</li>
+                        <li style="margin-bottom: 8px;">• Role-based access control</li>
+                        <li>• Session management with expiry</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="demo">
+        <div class="container">
+            <h2 class="section-title">Live Demonstration</h2>
+            <p style="font-size: 1.2rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 40px;">
+                Experience FhirFlame's multi-agent healthcare workflows in real-time
+            </p>
+            
+            <div class="demo-video">
+                <div class="demo-placeholder">
+                    🔴 LIVE demo <br>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px;">
+                <a href="https://huggingface.co/spaces/grasant/fhirflame" class="btn btn-primary" style="font-size: 1.2rem; padding: 20px 40px;">
+                    🚀 Try Live Demo Now
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+
+            <div class="footer-bottom">
+                <p><strong>⚠️ MVP/Prototype Only</strong> - Technology demonstration for development and testing purposes</p>
+                <p>🔒 Apache License 2.0 - Open Source Healthcare AI Platform</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

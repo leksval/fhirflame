@@ -1,0 +1,104 @@
+{
+  "resourceType": "Bundle",
+  "id": "example-bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "example-r4",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2023-01-01T00:00:00Z"
+        },
+        "identifier": [
+          {
+            "system": "http://example.org/patient-ids",
+            "value": "12345"
+          }
+        ],
+        "name": [
+          {
+            "family": "Doe",
+            "given": [
+              "John",
+              "Q."
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1980-01-01"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "example-r5",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2023-01-01T00:00:00Z",
+          "profile": [
+            "http://hl7.org/fhir/StructureDefinition/Patient"
+          ]
+        },
+        "identifier": [
+          {
+            "system": "http://example.org/patient-ids",
+            "value": "67890"
+          }
+        ],
+        "name": [
+          {
+            "family": "Smith",
+            "given": [
+              "Jane",
+              "R."
+            ],
+            "period": {
+              "start": "2020-01-01"
+            }
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1990-05-15",
+        "address": [
+          {
+            "use": "home",
+            "line": [
+              "123 Main St"
+            ],
+            "city": "Anytown",
+            "state": "CA",
+            "postalCode": "12345",
+            "country": "US"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "example-obs",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "55284-4",
+              "display": "Blood pressure"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/example-r4"
+        },
+        "valueQuantity": {
+          "value": 120,
+          "unit": "mmHg",
+          "system": "http://unitsofmeasure.org",
+          "code": "mm[Hg]"
+        }
+      }
+    }
+  ]
+}

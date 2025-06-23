@@ -1,0 +1,21 @@
+{
+    "name": "FhirFlame - Medical AI Platform",
+    "short_name": "FhirFlame",
+    "description": "Advanced Medical AI Platform with MCP integration and FHIR compliance",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0A0A0A",
+    "theme_color": "#E12E35",
+    "icons": [
+        {
+            "src": "fhirflame_logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "fhirflame_logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

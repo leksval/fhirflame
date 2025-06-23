@@ -1,0 +1,63 @@
+# FhirFlame - Production Requirements
+# For both Docker and Hugging Face deployment
+
+# Core framework
+gradio>=4.0.0
+pydantic>=2.7.2
+
+# Testing framework
+pytest>=7.4.0
+pytest-asyncio>=0.21.1
+pytest-mock>=3.12.0
+pytest-cov>=4.1.0
+pytest-benchmark>=4.0.0
+
+# AI and ML
+langchain>=0.1.0
+langchain-community>=0.0.20
+langchain-core>=0.1.0
+langfuse>=2.0.0
+
+# FHIR and healthcare
+fhir-resources>=7.0.2
+pydicom>=2.4.0
+
+# HTTP and async
+httpx>=0.27.0
+asyncio-mqtt>=0.11.1
+responses>=0.24.0
+
+# A2A API Framework
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+authlib>=1.2.1
+python-jose[cryptography]>=3.3.0
+python-multipart>=0.0.6
+
+# Database connectivity
+psycopg2-binary>=2.9.0
+
+# Environment and utilities
+python-dotenv>=1.0.0
+psutil>=5.9.6
+
+# MCP Framework
+mcp>=1.9.2
+
+# AI Models
+ollama>=0.1.7
+huggingface_hub>=0.19.0
+
+# Modal Labs for GPU auto-scaling
+modal>=0.64.0
+
+# PDF and Image Processing
+pdf2image>=1.16.3
+Pillow>=10.0.0
+PyPDF2>=3.0.1
+
+# Enhanced UI components for scaling dashboard
+plotly>=5.17.0
+
+# Docker integration for heavy workload demo
+docker>=6.1.0

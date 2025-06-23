@@ -1,0 +1,53 @@
+# FhirFlame - Hugging Face Spaces Deployment
+# Optimized for L4 GPU with healthcare AI capabilities
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies for medical document processing
+RUN apt-get update && apt-get install -y \
+    curl \
+    build-essential \
+    poppler-utils \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+
+# Install Python dependencies optimized for HF Spaces
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy core application files
+COPY src/ ./src/
+COPY app.py .
+COPY frontend_ui.py .
+COPY fhirflame_logo.svg .
+COPY fhirflame_logo_450x150.svg .
+
+# Copy environment configuration (HF Spaces will override)
+COPY .env* ./
+
+# Create necessary directories
+RUN mkdir -p logs test_results
+
+# Set Python path for proper imports
+ENV PYTHONPATH=/app
+ENV GRADIO_SERVER_NAME=0.0.0.0
+ENV GRADIO_SERVER_PORT=7860
+
+# HF Spaces specific environment
+ENV HF_SPACES_DEPLOYMENT=true
+ENV DEPLOYMENT_TARGET=hf_spaces
+
+# Expose Gradio port for HF Spaces
+EXPOSE 7860
+
+# Health check for HF Spaces
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:7860 || exit 1
+
+# Start the application
+CMD ["python", "app.py"]
