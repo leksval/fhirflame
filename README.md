@@ -5,7 +5,7 @@
 > **NOT approved for clinical use, patient data, or production healthcare environments.**
 > Requires proper regulatory evaluation, compliance review, and legal assessment before any real-world deployment.
 
-**Dockerized Healthcare AI Platform: Local/Cloud/Hybrid Deployment + Agent/MCP Server + FHIR R4/R5 + DICOM Processing + CodeLlama Integration**
+**Dockerized Healthcare AI Platform: Local/Cloud/Hybrid System Deployment + A2A/MCP Server with match processingcapabilities + FHIR R4/R5 compliant NLP data pextraction tested on real validation data + DICOM Processing + CodeLlama Integration + frontend fort sdommtoh UI experience**
 
 *This prototype demonstrates enterprise-grade medical AI architecture patterns, FHIR compliance workflows, and agent-to-agent communication for healthcare data intelligence - designed for technology evaluation and development purposes.*
 
@@ -14,7 +14,15 @@
 [![FHIR R4/R5](https://img.shields.io/badge/🏥-FHIR_Compliant-FFFFFF?style=for-the-badge&labelColor=DC143C)](#)
 
 ---
-[Project Website](https://leksval.github.io/fhirflame/index.html)
+
+
+
+# **[Project Website](https://leksval.github.io/fhirflame/index.html)**
+https://github.com/user-attachments/assets/81b4cf83-3a6a-467d-bb78-7670544530de
+
+### **Project Demo**
+https://github.com/user-attachments/assets/83947dfe-0c7b-4401-8f58-e0ce8d04b858
+
 
 
 ### **MCP Implementation**
@@ -57,9 +65,9 @@ LANGFUSE_PUBLIC_KEY=your-langfuse-public
 
 ### **🎯 Intelligent Provider Routing**
 - **Ollama Local**: Development and sensitive data ($0.00/request)
-- **Modal L4 GPU**: Production scaling
-- **HuggingFace**: Specialized medical models and fallback for ollama
-- **Mistral Vision**: OCR and document understanding
+- **Modal lAbs, desighned for L4 GPU**: Production dynamic scaling based on workload
+- **HuggingFace API**: Specialized medical models and fallback for ollama
+- **Mistral Vision API**: OCR and document understanding
 ---
 
 ## 🚀 Quick Start & Live Demo
