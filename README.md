@@ -1,4 +1,4 @@
-# 🔥🏥 FhirFlame Medical AI Data Processing Tool
+# 🔥🏥 FhirFlame: Medical AI Data Processing Tool
 
 #### *This prototype demonstrates enterprise-grade medical AI architecture patterns, FHIR compliance workflows, and agent-to-agent communication for healthcare data intelligence - designed for technology evaluation and development purposes.*
 
@@ -19,7 +19,7 @@
 > This is a **technology demonstration and MVP prototype** for development, testing, and educational purposes only.
 
 [![Live Demo](https://img.shields.io/badge/🚀-Live_Demo-DC143C?style=for-the-badge)](https://huggingface.co/spaces/grasant/fhirflame)
-[![Project Website](https://img.shields.io/badge/🏥-FHIR_Compliant-FFFFFF?style=for-the-badge&labelColor=DC143C)](https://leksval.github.io/fhirflame/index.html)
+[![Project Website](https://img.shields.io/badge/🏥-Project_Website-FFFFFF?style=for-the-badge&labelColor=DC143C)](https://leksval.github.io/fhirflame/index.html)
 
 ---
 https://github.com/user-attachments/assets/81b4cf83-3a6a-467d-bb78-7670544530de
