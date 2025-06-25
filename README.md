@@ -388,23 +388,6 @@ docker-compose -f docker-compose.modal.yml up -d
 - **Error Detection**: robust issue identification
 
 ---
-
-## 🤝 Contributing & Development
-
-### **Development Setup**
-```bash
-# Fork and clone
-git clone https://github.com/your-username/fhirflame.git
-cd fhirflame
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run tests
-python -m pytest tests/ -v
-
-# Start development server
-python app.py
 ```
 
 ### **Code Structure**
