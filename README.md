@@ -388,7 +388,6 @@ docker-compose -f docker-compose.modal.yml up -d
 - **Error Detection**: robust issue identification
 
 ---
-```
 
 ### **Code Structure**
 ```
