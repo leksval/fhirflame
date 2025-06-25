@@ -22,7 +22,6 @@
 [![Project Website](https://img.shields.io/badge/🏥-Project_Website-FFFFFF?style=for-the-badge&labelColor=DC143C)](https://leksval.github.io/fhirflame/index.html)
 
 ---
-https://github.com/user-attachments/assets/81b4cf83-3a6a-467d-bb78-7670544530de
 
 ### **Project Demo**
 https://github.com/user-attachments/assets/83947dfe-0c7b-4401-8f58-e0ce8d04b858
