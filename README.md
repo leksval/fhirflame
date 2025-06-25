@@ -1,21 +1,26 @@
-# 🔥 FhirFlame: Medical AI Data processing Tool
-
+# 🔥🏥 FhirFlame Medical AI Data Processing Tool
+***This prototype demonstrates enterprise-grade medical AI architecture patterns, FHIR compliance workflows, and agent-to-agent communication for healthcare data intelligence - designed for technology evaluation and development purposes.***
+---
++ Dockerized modular Healthcare AI Platform 
++ Local/Cloud/Hybrid System Deployment depending on needs and available hardware (Optimized for local use on 4090 or on Huggingface Space Nvidia L4 or on Modal Labs, to ulock dynamically scaling infrastructure)
++ A2A/MCP Server json comunication via FastAPI (Auth0 ready) 
++ TDD with integrated set of tests to keep HL7 standards (FHIR R4/R5 compliant outpout)
++ NLP data extraction tested on real validation data (text -> formatted JSON)
++ Optional Mistral OCR
++ DICOM files Processing
++ Local first design: tested with CodeLlama13b (Nvidia L4/4090 optimzed) or any model from HuggingFace HUB 
++ PostgreSQL-First Design with In-Memory Compatibility and Job Management 
++ Gradio frontend for smootoh UI experience 
++ Langfuse for better logging and system health tracking
+---
 > **⚠️ IMPORTANT DISCLAIMER - DEMO/MVP ONLY**
+>
 > This is a **technology demonstration and MVP prototype** for development, testing, and educational purposes only.
-> **NOT approved for clinical use, patient data, or production healthcare environments.**
-> Requires proper regulatory evaluation, compliance review, and legal assessment before any real-world deployment.
-
-**Dockerized Healthcare AI Platform: Local/Cloud/Hybrid System Deployment + A2A/MCP Server with match processingcapabilities + FHIR R4/R5 compliant NLP data pextraction tested on real validation data + DICOM Processing + CodeLlama Integration + frontend fort sdommtoh UI experience**
-
-*This prototype demonstrates enterprise-grade medical AI architecture patterns, FHIR compliance workflows, and agent-to-agent communication for healthcare data intelligence - designed for technology evaluation and development purposes.*
 
 [![Live Demo](https://img.shields.io/badge/🚀-Live_Demo-DC143C?style=for-the-badge)](https://huggingface.co/spaces/grasant/fhirflame)
-[![MCP Server](https://img.shields.io/badge/🔌-MCP_Ready-0A0A0A?style=for-the-badge)](https://modelcontextprotocol.io/)
 [![FHIR R4/R5](https://img.shields.io/badge/🏥-FHIR_Compliant-FFFFFF?style=for-the-badge&labelColor=DC143C)](#)
 
 ---
-
-
 
 # **[Project Website](https://leksval.github.io/fhirflame/index.html)**
 https://github.com/user-attachments/assets/81b4cf83-3a6a-467d-bb78-7670544530de
@@ -23,23 +28,27 @@ https://github.com/user-attachments/assets/81b4cf83-3a6a-467d-bb78-7670544530de
 ### **Project Demo**
 https://github.com/user-attachments/assets/83947dfe-0c7b-4401-8f58-e0ce8d04b858
 
+---
 
+## 🔒 Security & Compliance
 
-### **MCP Implementation**
-- **Official MCP Server** with 2 specialized healthcare tools
-- **Real-time Claude/GPT integration** for medical document processing
-- **Agent-to-agent workflows** for complex medical scenarios
-
-### **Innovative Healthcare Application**
+### **🏥 Innovative Healthcare Application**
 - **Multi-provider AI routing** (Ollama → Modal L4 → HuggingFace → Mistral)
 - **FHIR R4/R5 compliance engine** with 100% validation score and zero-dummy-data policy
 - **Real-time batch processing demo** with live dashboard integration
-- **Heavy workload demonstration** with 6-container orchestration
+- **Heavy workload demonstration** with 6-container orchestration and auto-scaling based on worklad requirements
+- 
+### **Healthcare Standards**
+- **HL7 standards**: Fully FHIR R4/R5 compliant 
+- **HIPAA Considerations**: Built-in audit logging
+- **Zero-Dummy-Data**: Production-safe entity extraction
+- **Medical AI Ethics** - Responsible healthcare AI development: local & open soursce first 
 
-### **Agent Communication System**
-- **A2A API endpoints** for healthcare system integration
-- **Real-time medical workflows** between specialized agents
-- **Production-ready architecture** for hospital environments
+### **Security Features**
+- **JWT Authentication**: Secure API access
+- **Audit Trails**: Complete interaction logging
+- **Container Isolation**: Docker security boundaries
+- **Environment Secrets**: Secure configuration management
 
 ---
 
@@ -65,7 +74,7 @@ LANGFUSE_PUBLIC_KEY=your-langfuse-public
 
 ### **🎯 Intelligent Provider Routing**
 - **Ollama Local**: Development and sensitive data ($0.00/request)
-- **Modal lAbs, desighned for L4 GPU**: Production dynamic scaling based on workload
+- **Modal Labs, desighned for L4 GPU**: Production dynamic scaling based on workload
 - **HuggingFace API**: Specialized medical models and fallback for ollama
 - **Mistral Vision API**: OCR and document understanding
 ---
@@ -91,6 +100,12 @@ open http://localhost:3000    # Langfuse Monitoring
 open http://localhost:8000    # A2A API
 ```
 
+### **🔌 Communication System**
+- **Official MCP Server** with 2 specialized healthcare tools
+- **Real-time Claude/GPT integration** for medical document processing
+- **A2A API endpoints** for healthcare system integration
+- **Production-ready architecture** for hospital environments
+- **Standardized JSON output** for complex medical scenarios
 ---
 
 ## 🔌 MCP Protocol Excellence
@@ -372,39 +387,7 @@ docker-compose -f docker-compose.modal.yml up -d
 - **R4 Bundle Generation**: 100% compliance
 - **R5 Bundle Generation**: 100% compliance
 - **Validation Speed**: <200ms per bundle
-- **Error Detection**: 99.1% issue identification
-
----
-
-## 🛠️ Technology Stack
-
-### **Core Framework**
-- **Backend**: Python 3.11, FastAPI, Asyncio
-- **Frontend**: Gradio with custom FhirFlame branding
-- **AI Models**: CodeLlama 13B, Modal L4 GPUs, HuggingFace
-- **Healthcare**: FHIR R4/R5, DICOM file processing, HL7 standards
-
-### **Infrastructure**
-- **Deployment**: Docker Compose, HF Spaces, Modal Labs
-- **Monitoring**: Langfuse integration, real-time analytics
-- **Database**: PostgreSQL, ClickHouse for analytics
-- **Security**: HIPAA considerations, audit logging
-
----
-
-## 🔒 Security & Compliance
-
-### **Healthcare Standards**
-- **FHIR R4/R5**: Full compliance with HL7 standards
-- **HIPAA Considerations**: Built-in audit logging
-- **Zero-Dummy-Data**: Production-safe entity extraction
-- **Data Privacy**: Local processing options available
-
-### **Security Features**
-- **JWT Authentication**: Secure API access
-- **Audit Trails**: Complete interaction logging
-- **Container Isolation**: Docker security boundaries
-- **Environment Secrets**: Secure configuration management
+- **Error Detection**: robust issue identification
 
 ---
 
@@ -440,27 +423,8 @@ fhirflame/
 ```
 
 ---
-
 ## 📄 License & Credits
 
 **Apache License 2.0** - Open source healthcare AI platform
-
-### **Team & Acknowledgments**
-- **FhirFlame Development Team** - Medical AI specialists
-- **Healthcare Compliance** - Built with medical professionals
-- **Open Source Community** - FHIR, MCP, and healthcare standards
-
-### **Healthcare Standards Compliance**
-- **HL7 FHIR** - Official healthcare interoperability standards
-- **Model Context Protocol** - Agent communication standards
-- **Medical AI Ethics** - Responsible healthcare AI development
-
----
-
-**🏥 Built for healthcare professionals by healthcare AI specialists**  
-**⚡ Powered by Modal Labs L4 GPU infrastructure**  
-**🔒 Trusted for healthcare compliance and data security**
-
----
 
 *Last Updated: June 2025 | Version: Hackathon Submission*
