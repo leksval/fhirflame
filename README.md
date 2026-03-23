@@ -1,410 +1,415 @@
-# 🔥🏥 FhirFlame: Medical AI Data Processing Tool
-
-#### *This prototype demonstrates enterprise-grade medical AI architecture patterns, FHIR compliance workflows, and agent-to-agent communication for healthcare data intelligence - designed for technology evaluation and development purposes.*
-
-+ Dockerized modular Healthcare AI Platform 
-+ Local/Cloud/Hybrid System Deployment depending on needs and available hardware (Optimized for local use on 4090 or on Huggingface Space Nvidia L4 or on Modal Labs, to ulock dynamically scaling infrastructure)
-+ A2A/MCP Server json comunication via FastAPI (Auth0 ready) 
-+ TDD with integrated set of tests to keep HL7 standards (FHIR R4/R5 compliant outpout)
-+ NLP data extraction tested on real validation data (text -> formatted JSON)
-+ Optional Mistral OCR
-+ DICOM files Processing
-+ Local first design: tested with CodeLlama13b (Nvidia L4/4090 optimzed) or any model from HuggingFace HUB 
-+ PostgreSQL-First Design with In-Memory Compatibility and Job Management 
-+ Gradio frontend for smootoh UI experience 
-+ Langfuse for better logging and system health tracking
 ---
-> **⚠️ IMPORTANT DISCLAIMER - DEMO/MVP ONLY**
+title: FhirFlame - Medical AI Platform (MVP/Prototype)
+emoji: 🔥
+colorFrom: red
+colorTo: gray
+sdk: gradio
+sdk_version: 5.33.1
+app_file: app.py
+pinned: false
+license: apache-2.0
+short_description: "Medical AI Data processing Tool"
+tags:
+- mcp-server-track
+- agent-demo-track
+- healthcare-demo
+- fhir-prototype
+- medical-ai-mvp
+- technology-demonstration
+- prototype
+- mvp
+- demo-only
+- hackathon-submission
+---
+
+<p align="center">
+  <img src="fhirflame_logo_450x150.svg" alt="FhirFlame" width="450" />
+</p>
+
+<p align="center">
+  <strong>Medical AI platform for document processing, FHIR compliance, and agent-to-agent communication.</strong>
+</p>
+
+<p align="center">
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.11-blue?logo=python&logoColor=white" alt="Python 3.11" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache_2.0-green" alt="License" /></a>
+  <a href="https://www.hl7.org/fhir/"><img src="https://img.shields.io/badge/FHIR-R4%20%2F%20R5-crimson" alt="FHIR R4/R5" /></a>
+  <a href="https://modelcontextprotocol.io/"><img src="https://img.shields.io/badge/MCP-compatible-black" alt="MCP" /></a>
+  <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/docker-compose-2496ED?logo=docker&logoColor=white" alt="Docker" /></a>
+  <a href="https://huggingface.co/spaces/grasant/fhirflame"><img src="https://img.shields.io/badge/demo-Hugging_Face_Spaces-orange?logo=huggingface&logoColor=white" alt="Live Demo" /></a>
+</p>
+
+---
+
+> **Disclaimer -- Prototype / MVP Only**
 >
-> This is a **technology demonstration and MVP prototype** for development, testing, and educational purposes only.
-
-[![Live Demo](https://img.shields.io/badge/🚀-Live_Demo-DC143C?style=for-the-badge)](https://huggingface.co/spaces/grasant/fhirflame)
-[![Project Website](https://img.shields.io/badge/🏥-Project_Website-FFFFFF?style=for-the-badge&labelColor=DC143C)](https://leksval.github.io/fhirflame/index.html)
-
----
-
-### **Project Demo**
-https://github.com/user-attachments/assets/83947dfe-0c7b-4401-8f58-e0ce8d04b858
+> FhirFlame is a technology demonstration for development, testing, and educational purposes.
+> It is **not** approved for clinical use, patient data, or production healthcare environments.
+> Any real-world deployment requires independent regulatory evaluation, compliance review,
+> and legal assessment.
 
 ---
 
-## 🔒 Security & Compliance
+## Table of Contents
 
-### **🏥 Innovative Healthcare Application**
-- **Multi-provider AI routing** (Ollama → Modal L4 → HuggingFace → Mistral)
-- **FHIR R4/R5 compliance engine** with 100% validation score and zero-dummy-data policy
-- **Real-time batch processing demo** with live dashboard integration
-- **Heavy workload demonstration** with 6-container orchestration and auto-scaling based on worklad requirements
-- 
-### **Healthcare Standards**
-- **HL7 standards**: Fully FHIR R4/R5 compliant 
-- **HIPAA Considerations**: Built-in audit logging
-- **Zero-Dummy-Data**: Production-safe entity extraction
-- **Medical AI Ethics** - Responsible healthcare AI development: local & open soursce first 
-
-### **Security Features**
-- **JWT Authentication**: Secure API access
-- **Audit Trails**: Complete interaction logging
-- **Container Isolation**: Docker security boundaries
-- **Environment Secrets**: Secure configuration management
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Architecture](#architecture)
+- [Quick Start](#quick-start)
+- [MCP Tools](#mcp-tools)
+- [A2A API](#a2a-api)
+- [Configuration](#configuration)
+- [Project Structure](#project-structure)
+- [Testing](#testing)
+- [Technology Stack](#technology-stack)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## ⚡ Multi-Provider AI & Environment Configuration
+## Overview
 
-### **🔧 Provider Configuration Options**
-```bash
-# 🆓 FREE Local Development (No API Keys Required)
-USE_REAL_OLLAMA=true
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=codellama:13b-instruct
+FhirFlame is a dockerized medical AI platform that ingests clinical text, PDF/image
+documents, and DICOM imaging metadata, then extracts structured medical entities and
+produces validated FHIR R4/R5 bundles. It exposes its capabilities through a Gradio web
+UI, a FastAPI agent-to-agent (A2A) REST API, and a Model Context Protocol (MCP) server
+for integration with LLM-based agents such as Claude and GPT.
 
-# 🚀 Production Cloud Scaling (Optional API Keys)
-MISTRAL_API_KEY=your-mistral-key        # $0.001/1K tokens
-HF_TOKEN=your-huggingface-token         # $0.002/1K tokens  
-MODAL_TOKEN_ID=your-modal-id            # $0.0008/1K tokens
-MODAL_TOKEN_SECRET=your-modal-secret
+AI workloads are routed across multiple providers -- Ollama (local, free), Modal (GPU
+cloud), HuggingFace Inference API, and Mistral (vision/OCR) -- with automatic fallback.
+Observability is handled by Langfuse, backed by PostgreSQL and ClickHouse, all
+orchestrated via Docker Compose.
 
-# 📊 Monitoring & Analytics (Optional)
-LANGFUSE_SECRET_KEY=your-langfuse-secret
-LANGFUSE_PUBLIC_KEY=your-langfuse-public
+---
+
+## Key Features
+
+- **MCP Server** -- two healthcare-specific tools (`process_medical_document`,
+  `validate_fhir_bundle`) for seamless LLM agent integration.
+- **FHIR R4/R5 Validation** -- generates and validates HL7 FHIR-compliant bundles with
+  a zero-dummy-data policy.
+- **Multi-Provider AI Routing** -- Ollama, Modal L4 GPU, HuggingFace, and Mistral
+  Vision, with intelligent fallback and cost-aware selection.
+- **DICOM Processing** -- extracts metadata from medical imaging files via pydicom.
+- **Agent-to-Agent API** -- FastAPI-based REST endpoints for inter-service communication
+  and EHR system integration.
+- **Observability** -- Langfuse tracing and monitoring with PostgreSQL persistence and
+  ClickHouse analytics.
+- **Docker Compose Orchestration** -- single-command deployment of the full stack
+  (Gradio UI, Ollama, A2A API, Langfuse, PostgreSQL, ClickHouse).
+- **Comprehensive Test Suite** -- 29 test modules covering unit, integration, MCP, FHIR
+  validation, and GPU workflows.
+
+---
+
+## Architecture
+
+```mermaid
+graph TB
+    subgraph clients [Clients]
+        Browser[Gradio Web UI<br/>port 7860]
+        Agent[LLM Agent<br/>Claude / GPT]
+        ExtAPI[External Service]
+    end
+
+    subgraph core [FhirFlame Core]
+        App[app.py<br/>Job Manager]
+        MCPServer[MCP Server<br/>fhirflame_mcp_server.py]
+        A2A[A2A API<br/>FastAPI, port 8000]
+    end
+
+    subgraph processing [Processing Layer]
+        Orchestrator[Workflow Orchestrator]
+        EntityExtract[Entity Extraction]
+        FHIRValid[FHIR Validator<br/>R4 / R5]
+        DICOMProc[DICOM Processor]
+    end
+
+    subgraph providers [AI Providers]
+        Ollama[Ollama<br/>CodeLlama 13B]
+        Modal[Modal<br/>L4 GPU]
+        HF[HuggingFace<br/>Inference API]
+        Mistral[Mistral<br/>Vision / OCR]
+    end
+
+    subgraph observability [Observability]
+        Langfuse[Langfuse<br/>port 3000]
+        Postgres[(PostgreSQL)]
+        ClickHouse[(ClickHouse)]
+    end
+
+    Browser --> App
+    Agent --> MCPServer
+    ExtAPI --> A2A
+
+    App --> Orchestrator
+    MCPServer --> Orchestrator
+    A2A --> Orchestrator
+
+    Orchestrator --> EntityExtract
+    Orchestrator --> FHIRValid
+    Orchestrator --> DICOMProc
+
+    Orchestrator --> Ollama
+    Orchestrator --> Modal
+    Orchestrator --> HF
+    Orchestrator --> Mistral
+
+    App --> Langfuse
+    MCPServer --> Langfuse
+    Langfuse --> Postgres
+    Langfuse --> ClickHouse
 ```
 
-### **🎯 Intelligent Provider Routing**
-- **Ollama Local**: Development and sensitive data ($0.00/request)
-- **Modal Labs, desighned for L4 GPU**: Production dynamic scaling based on workload
-- **HuggingFace API**: Specialized medical models and fallback for ollama
-- **Mistral Vision API**: OCR and document understanding
 ---
 
-## 🚀 Quick Start & Live Demo
+## Quick Start
 
-### **🌐 Hugging Face Spaces Demo**
-```bash
-# Visit live deployment
-https://huggingface.co/spaces/grasant/fhirflame
-```
+### Prerequisites
 
-### **💻 Local Development (60 seconds)**
+- [Docker](https://docs.docker.com/get-docker/) and Docker Compose
+- Python 3.11+ (for local development without Docker)
+- 8 GB RAM minimum
+- NVIDIA GPU optional (enables local Ollama acceleration)
+
+### Option A -- Docker (recommended)
+
 ```bash
-# Clone and run locally
-git clone https://github.com/your-org/fhirflame.git
+git clone https://github.com/grasant/fhirflame.git
 cd fhirflame
-docker-compose -f docker-compose.local.yml up -d
-
-# Access interfaces
-open http://localhost:7860    # FhirFlame UI
-open http://localhost:3000    # Langfuse Monitoring
-open http://localhost:8000    # A2A API
+cp .env.example .env          # edit .env to add optional API keys
+docker compose -f docker-compose.local.yml up -d
 ```
 
-### **🔌 Communication System**
-- **Official MCP Server** with 2 specialized healthcare tools
-- **Real-time Claude/GPT integration** for medical document processing
-- **A2A API endpoints** for healthcare system integration
-- **Production-ready architecture** for hospital environments
-- **Standardized JSON output** for complex medical scenarios
+Once running:
+
+| Service | URL |
+| --- | --- |
+| Gradio UI | `http://localhost:7860` |
+| A2A API | `http://localhost:8000` |
+| Langfuse | `http://localhost:3000` |
+| Ollama | `http://localhost:11434` |
+
+### Option B -- Local Python
+
+```bash
+git clone https://github.com/grasant/fhirflame.git
+cd fhirflame
+python -m venv .venv && source .venv/bin/activate   # or .venv\Scripts\activate on Windows
+pip install -r requirements.txt
+cp .env.example .env
+python app.py
+```
+
+The Gradio UI starts at `http://localhost:7860`.
+
+### Hugging Face Spaces
+
+A hosted demo is available at
+[huggingface.co/spaces/grasant/fhirflame](https://huggingface.co/spaces/grasant/fhirflame).
+
 ---
 
-## 🔌 MCP Protocol Excellence
+## MCP Tools
 
-### **2 Perfect Healthcare Tools**
+FhirFlame implements the [Model Context Protocol](https://modelcontextprotocol.io/) with
+two tools designed for healthcare document workflows.
 
-#### **1. `process_medical_document`**
-```python
-# Real-world usage with Claude/GPT
+### process_medical_document
+
+Accepts clinical text, extracts medical entities (conditions, medications, vitals,
+patient info), and optionally generates a FHIR bundle.
+
+```json
 {
-    "tool": "process_medical_document",
-    "input": {
-        "document_content": "Patient presents with chest pain and SOB...",
-        "document_type": "clinical_note",
-        "extract_entities": true,
-        "generate_fhir": true
-    }
+  "tool": "process_medical_document",
+  "input": {
+    "document_content": "Patient presents with chest pain and shortness of breath...",
+    "document_type": "clinical_note",
+    "extract_entities": true,
+    "generate_fhir": true
+  }
 }
-# Returns: Structured FHIR bundle + extracted medical entities
 ```
 
-#### **2. `validate_fhir_bundle`**
-```python
-# FHIR R4/R5 compliance validation
+### validate_fhir_bundle
+
+Validates a FHIR bundle against R4 or R5 specifications and returns a compliance report.
+
+```json
 {
-    "tool": "validate_fhir_bundle", 
-    "input": {
-        "fhir_bundle": {...},
-        "fhir_version": "R4",
-        "validation_level": "healthcare_grade"
-    }
+  "tool": "validate_fhir_bundle",
+  "input": {
+    "fhir_bundle": { "resourceType": "Bundle", "...": "..." },
+    "fhir_version": "R4",
+    "validation_level": "healthcare_grade"
+  }
 }
-# Returns: Compliance score + validation details
 ```
 
-### **Agent-to-Agent Medical Workflows**
+### Agent Workflow
 
 ```mermaid
 sequenceDiagram
-    participant Claude as Claude AI
+    participant Agent as LLM Agent
     participant MCP as FhirFlame MCP Server
-    participant Router as Multi-Provider Router
+    participant Router as Provider Router
     participant FHIR as FHIR Validator
-    participant Monitor as Langfuse Monitor
-    
-    Claude->>MCP: process_medical_document()
-    MCP->>Monitor: Log tool execution
-    MCP->>Router: Route to optimal AI provider
-    Router->>Router: Extract medical entities
-    Router->>FHIR: Generate & validate FHIR bundle
-    FHIR->>Monitor: Log compliance results
-    MCP->>Claude: Return structured medical data
+    participant LF as Langfuse
+
+    Agent->>MCP: process_medical_document()
+    MCP->>LF: start trace
+    MCP->>Router: route to optimal provider
+    Router->>Router: extract medical entities
+    Router->>FHIR: generate and validate bundle
+    FHIR->>LF: log compliance result
+    MCP-->>Agent: structured FHIR bundle + entities
 ```
 
 ---
 
-## 🔄 Job Management & Data Flow Architecture
+## A2A API
 
-### **Hybrid PostgreSQL + Langfuse Job Management System**
+The agent-to-agent API runs on port 8000 (FastAPI + Uvicorn) and supports both
+synchronous and asynchronous document processing.
 
-FhirFlame implements a production-grade job management system with **PostgreSQL persistence** and **Langfuse observability** for enterprise healthcare deployments.
-
-#### **Persistent Job Storage Architecture**
-```python
-# PostgreSQL-First Design with In-Memory Compatibility
-class UnifiedJobManager:
-    def __init__(self):
-        # Minimal in-memory state for legacy compatibility
-        self.jobs_database = {
-            "processing_jobs": [],      # Synced from PostgreSQL
-            "batch_jobs": [],           # Synced from PostgreSQL
-            "container_metrics": [],    # Modal container scaling
-            "performance_metrics": [],  # AI provider performance
-            "queue_statistics": {},     # Calculated from PostgreSQL
-            "system_monitoring": []     # System performance
-        }
-        
-        # Dashboard state calculated from PostgreSQL
-        self.dashboard_state = {
-            "active_tasks": 0,
-            "total_files": 0,
-            "successful_files": 0,
-            "failed_files": 0
-        }
-        
-        # Auto-sync from PostgreSQL on startup
-        self._sync_dashboard_from_db()
-```
-
-#### **Langfuse + PostgreSQL Integration**
-```python
-# Real-time job tracking with persistent storage
-job_id = job_manager.add_processing_job("text", "Clinical Note Processing", {
-    "enable_fhir": True,
-    "user_id": "healthcare_provider_001",
-    "langfuse_trace_id": "trace_abc123"  # Langfuse observability
-})
-
-# PostgreSQL persistence with Langfuse monitoring
-job_manager.update_job_completion(job_id, success=True, metrics={
-    "processing_time": "2.3s",
-    "entities_found": 15,
-    "method": "CodeLlama (Ollama)",
-    "fhir_compliance_score": 100,
-    "langfuse_span_id": "span_def456"
-})
-
-# Dashboard metrics from PostgreSQL + Langfuse analytics
-metrics = db_manager.get_dashboard_metrics()
-# Returns: {'active_jobs': 3, 'completed_jobs': 847, 'successful_jobs': 831, 'failed_jobs': 16}
-```
-
-### **Data Flow Architecture**
-
-#### **Frontend ↔ Backend Communication**
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Gradio UI     │───▶│  App.py Core     │───▶│  Job Manager    │
-│                 │    │                  │    │                 │
-│ • Text Input    │    │ • Route Tasks    │    │ • Track Jobs    │
-│ • File Upload   │    │ • Handle Cancel  │    │ • Update State  │
-│ • Cancel Button │    │ • Update UI      │    │ • Queue Tasks   │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-         │                       │                       │
-         │              ┌──────────────────┐             │
-         │              │ Processing Queue │             │
-         │              │                  │             │
-         │              │ • Text Tasks     │             │
-         │              │ • File Tasks     │             │
-         │              │ • DICOM Tasks    │             │
-         │              └──────────────────┘             │
-         │                       │                       │
-         └───────────────────────┼───────────────────────┘
-                                 ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    AI Processing Layer                          │
-│                                                                 │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
-│  │   Ollama    │  │ HuggingFace │  │ Mistral OCR │             │
-│  │ CodeLlama   │  │     API     │  │     API     │             │
-│  └─────────────┘  └─────────────┘  └─────────────┘             │
-│                                                                 │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
-│  │ FHIR Valid. │  │   pydicom   │  │ Entity Ext. │             │
-│  │   Engine    │  │  Processing │  │   Module    │             │
-│  └─────────────┘  └─────────────┘  └─────────────┘             │
-└─────────────────────────────────────────────────────────────────┘
-                                 │
-                                 ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    Dashboard State                              │
-│                                                                 │
-│ • Active Jobs: 2        • Success Rate: 94.2%                  │
-│ • Total Files: 156      • Failed Jobs: 9                       │
-│ • Processing Queue: 3   • Last Update: Real-time               │
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🧪 API Testing & Sample Jobs
-
-### **MCP Server Testing**
 ```bash
-# Test MCP tools directly
-python -c "
-from src.fhirflame_mcp_server import FhirFlameMCPServer
-server = FhirFlameMCPServer()
-result = server.process_medical_document('Patient has diabetes and hypertension')
-print(result)
-"
-```
+# Health check
+curl http://localhost:8000/health
 
-### **A2A API Testing**
-```bash
-# Test agent-to-agent communication
+# Process a clinical note
 curl -X POST http://localhost:8000/api/v1/process-document \
   -H "Content-Type: application/json" \
   -d '{"document_text": "Clinical note: Patient presents with chest pain"}'
 ```
 
-### **Sample Job Data Structure**
-```python
-# Real-time job tracking
-sample_job = {
-    "job_id": "uuid-123",
-    "job_name": "Clinical Note Processing",
-    "task_type": "text_task",
-    "status": "completed",
-    "processing_time": "2.3s",
-    "entities_found": 15,
-    "method": "CodeLlama (Ollama)",
-    "fhir_compliance_score": 100,
-    "langfuse_trace_id": "trace_abc123",
-    "timestamp": "2025-06-10T09:45:23Z",
-    "user_id": "healthcare_provider_001"
-}
-```
+---
+
+## Configuration
+
+All configuration is managed through environment variables. Copy
+[`.env.example`](.env.example) to `.env` and edit as needed.
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `USE_REAL_OLLAMA` | No | Enable local Ollama provider (`true`) |
+| `OLLAMA_BASE_URL` | No | Ollama endpoint, default `http://localhost:11434` |
+| `OLLAMA_MODEL` | No | Model name, default `codellama:13b-instruct` |
+| `MISTRAL_API_KEY` | No | Mistral API key for vision/OCR |
+| `HF_TOKEN` | No | HuggingFace Inference API token |
+| `MODAL_TOKEN_ID` | No | Modal Labs token ID for GPU cloud |
+| `MODAL_TOKEN_SECRET` | No | Modal Labs token secret |
+| `LANGFUSE_SECRET_KEY` | No | Langfuse secret key for observability |
+| `LANGFUSE_PUBLIC_KEY` | No | Langfuse public key |
+| `LANGFUSE_HOST` | No | Langfuse endpoint, default `https://cloud.langfuse.com` |
+| `ENABLE_FHIR_R4` | No | Enable FHIR R4 validation (`true`) |
+| `ENABLE_FHIR_R5` | No | Enable FHIR R5 validation (`true`) |
+
+No API keys are required for local development -- Ollama runs entirely on your machine.
 
 ---
 
-## 🏥 Real Healthcare Workflows
+## Project Structure
 
-### **Clinical Document Processing**
-1. **PDF Medical Records** → OCR with Mistral Vision API
-2. **Text Extraction** → Entity recognition (conditions, medications, vitals)
-3. **FHIR Generation** → R4/R5 compliant bundles
-4. **Validation** → Healthcare-grade compliance scoring
-5. **Integration** → A2A API for EHR systems
-
-### **Multi-Agent Hospital Scenarios**
-
-#### **Emergency Department Workflow**
-```
-Patient Intake Agent → Triage Nurse Agent → Emergency Doctor Agent 
-→ Lab Agent → Radiology Agent → Pharmacy Agent → Discharge Agent
-```
-
----
-
-## 📋 Installation & Environment Setup
-
-### **Requirements**
-- Docker & Docker Compose
-- Python 3.11+ (for local development)
-- 8GB+ RAM recommended
-- GPU optional (NVIDIA for Ollama)
-
-### **Environment Configuration**
-```bash
-# Core API Keys (optional - works without)
-MISTRAL_API_KEY=your-mistral-key
-HF_TOKEN=your-huggingface-token
-MODAL_TOKEN_ID=your-modal-id
-MODAL_TOKEN_SECRET=your-modal-secret
-
-# Local AI (free)
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=codellama:13b-instruct
-
-# Monitoring (optional)
-LANGFUSE_SECRET_KEY=your-langfuse-secret
-LANGFUSE_PUBLIC_KEY=your-langfuse-public
-```
-
-### **Quick Deploy Options**
-
-#### **Option 1: Full Local Stack**
-```bash
-docker-compose -f docker-compose.local.yml up -d
-# Includes: Gradio UI + Ollama + A2A API + Langfuse + PostgreSQL
-```
-
-#### **Option 2: Cloud Scaling**
-```bash
-docker-compose -f docker-compose.modal.yml up -d
-# Includes: Modal L4 GPU integration + production monitoring
-```
-
----
-
-## 📊 Real Performance Data
-
-### **Actual Processing Times** *(measured on live system)*
-| Document Type | Ollama Local | Modal L4 | HuggingFace | Mistral Vision |
-|---------------|--------------|----------|-------------|----------------|
-| Clinical Note | 2.3s | 1.8s | 4.2s | 2.9s |
-| Lab Report | 1.9s | 1.5s | 3.8s | 2.1s |
-| Discharge Summary | 5.7s | 3.1s | 8.9s | 4.8s |
-| Radiology Report | 3.4s | 2.2s | 6.1s | 3.5s |
-
-### **Entity Extraction Accuracy** *(validated on medical datasets)*
-- **Conditions**: High accuracy extraction
-- **Medications**: High accuracy extraction
-- **Vitals**: High accuracy extraction
-- **Patient Info**: High accuracy extraction
-
-### **FHIR Compliance Scores** *(healthcare validation)*
-- **R4 Bundle Generation**: 100% compliance
-- **R5 Bundle Generation**: 100% compliance
-- **Validation Speed**: <200ms per bundle
-- **Error Detection**: robust issue identification
-
----
-
-### **Code Structure**
-```
+```text
 fhirflame/
-├── src/                    # Core processing modules
-│   ├── fhirflame_mcp_server.py    # MCP protocol implementation
-│   ├── enhanced_codellama_processor.py  # Multi-provider routing
-│   ├── fhir_validator.py          # Healthcare compliance
-│   └── mcp_a2a_api.py             # Agent-to-agent APIs
-├── app.py                  # Main application entry
-├── frontend_ui.py          # Gradio interface
-└── docker-compose.*.yml    # Deployment configurations
+├── app.py                          # Application entry point and job manager
+├── frontend_ui.py                  # Gradio UI definition
+├── database.py                     # PostgreSQL / SQLite persistence
+├── src/
+│   ├── fhirflame_mcp_server.py     # MCP server and tool handlers
+│   ├── mcp_a2a_api.py              # FastAPI A2A endpoints
+│   ├── workflow_orchestrator.py    # End-to-end processing pipeline
+│   ├── enhanced_codellama_processor.py  # Multi-provider AI routing
+│   ├── codellama_processor.py      # Base LLM processor
+│   ├── fhir_validator.py           # FHIR R4/R5 validation engine
+│   ├── dicom_processor.py          # DICOM metadata extraction
+│   ├── file_processor.py           # File upload handling
+│   ├── medical_extraction_utils.py # Entity extraction utilities
+│   ├── monitoring.py               # Langfuse integration
+│   └── heavy_workload_demo.py      # Batch processing demo
+├── cloud_modal/                    # Modal Labs cloud functions
+├── modal_deployments/              # Standalone Modal app definitions
+├── tests/                          # 29 test modules (pytest)
+│   ├── pytest.ini                  # Pytest configuration
+│   └── medical_files/              # Test fixtures
+├── official_fhir_tests/            # FHIR R4/R5 JSON fixtures
+├── samples/                        # Sample clinical documents
+├── static/                         # Favicon and web manifest
+├── docker-compose.local.yml        # Full local stack (6 services)
+├── docker-compose.modal.yml        # Modal-oriented deployment
+├── Dockerfile                      # Main container image
+├── Dockerfile.hf-spaces            # Hugging Face Spaces image
+├── requirements.txt                # Python dependencies
+├── .env.example                    # Environment variable template
+└── LICENSE                         # Apache 2.0
 ```
 
 ---
-## 📄 License & Credits
 
-**Apache License 2.0** - Open source healthcare AI platform
+## Testing
 
-*Last Updated: June 2025 | Version: Hackathon Submission*
+The test suite uses pytest with asyncio support and is configured in
+[`tests/pytest.ini`](tests/pytest.ini).
+
+```bash
+# Run the full suite
+python -m pytest tests/ -v
+
+# Run with coverage
+python -m pytest tests/ --cov=src --cov-report=term-missing
+
+# Run a specific marker
+python -m pytest tests/ -m unit -v
+```
+
+Available markers: `unit`, `integration`, `gpu`, `mcp`.
+
+---
+
+## Technology Stack
+
+### Core
+
+- Python 3.11, FastAPI, Gradio, asyncio
+
+### AI / ML
+
+- Ollama (CodeLlama 13B), HuggingFace Inference API, Modal Labs (L4 GPU), Mistral (vision/OCR)
+- LangChain for orchestration
+
+### Healthcare
+
+- FHIR R4/R5 via `fhir-resources`, DICOM via `pydicom`, HL7 standards
+
+### Infrastructure
+
+- Docker Compose, PostgreSQL, ClickHouse, Langfuse
+- Hugging Face Spaces and Modal Labs for cloud deployment
+
+### Test Frameworks
+
+- pytest, pytest-asyncio, pytest-cov, pytest-mock, pytest-benchmark
+
+---
+
+## Contributing
+
+Contributions are welcome. To get started:
+
+```bash
+git clone https://github.com/grasant/fhirflame.git
+cd fhirflame
+pip install -r requirements.txt
+python -m pytest tests/ -v
+```
+
+1. Fork the repository and create a feature branch.
+2. Make your changes and ensure all tests pass.
+3. Submit a pull request with a clear description of the change.
+
+---
+
+## License
+
+This project is licensed under the [Apache License 2.0](LICENSE).
