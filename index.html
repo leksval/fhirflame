@@ -2188,6 +2188,7 @@ function toggleDemo() {
     var video = document.getElementById('demoVideo');
     var overlay = document.getElementById('videoOverlay');
     if (video.paused) {
+        video.playbackRate = 0.8;
         video.play();
         overlay.classList.add('hidden');
     } else {
