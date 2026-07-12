@@ -33,6 +33,9 @@
             --text: #F0F0F0;
             --text-secondary: #A0A0A0;
             --text-muted: #6B6B6B;
+            --cta-metal: linear-gradient(105deg, #727985 0%, #AAB0BA 24%, #F5F7FA 48%, #DC2626 54%, #B8BEC8 72%, #727985 100%);
+            --cta-red: #8F1018;
+            --cta-red-soft: rgba(143,16,24,0.72);
             --radius: 12px;
             --radius-lg: 16px;
         }
@@ -63,62 +66,104 @@
             left: 0;
             right: 0;
             z-index: 100;
-            background: rgba(17,17,17,0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-            transition: background 0.3s;
+            background: rgba(12,12,12,0.88);
+            backdrop-filter: blur(20px) saturate(130%);
+            -webkit-backdrop-filter: blur(20px) saturate(130%);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+        }
+
+        .navbar::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            bottom: -1px;
+            left: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 8%, rgba(220,38,38,0.7) 32%, rgba(240,240,240,0.22) 50%, rgba(14,165,233,0.42) 68%, transparent 92%);
+            opacity: 0.55;
         }
 
         .navbar .container {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 64px;
+            height: 72px;
         }
 
         .nav-brand {
             display: flex;
             align-items: center;
-            gap: 10px;
             text-decoration: none;
             color: var(--text);
-            font-weight: 700;
-            font-size: 1.1rem;
+            transition: opacity 0.2s ease, transform 0.2s ease;
         }
 
+        .nav-brand:hover { opacity: 0.86; transform: translateY(-1px); }
+
         .nav-brand img {
-            height: 32px;
+            height: 40px;
             width: auto;
+            filter: drop-shadow(0 0 12px rgba(220,38,38,0.12));
         }
 
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 32px;
+            gap: 28px;
             list-style: none;
         }
 
         .nav-links a {
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: color 0.2s;
+            font-size: 0.74rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color 0.2s ease;
         }
 
         .nav-links a:hover { color: var(--text); }
 
-        .nav-cta {
-            background: var(--accent);
-            color: #fff !important;
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: opacity 0.2s;
+        .nav-links a:not(.nav-cta) {
+            position: relative;
+            padding: 27px 0 24px;
         }
 
-        .nav-cta:hover { opacity: 0.9; }
+        .nav-links a:not(.nav-cta)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            bottom: 18px;
+            left: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent), var(--trust));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.25s ease;
+        }
+
+        .nav-links a:not(.nav-cta):hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .nav-cta {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(120deg, #7F1118, var(--accent) 52%, #A3131C);
+            color: #fff !important;
+            padding: 10px 20px;
+            clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+            box-shadow: 0 8px 22px rgba(220,38,38,0.2);
+            transition: filter 0.2s ease, transform 0.2s ease;
+        }
+
+        .nav-cta:hover {
+            filter: brightness(1.12);
+            transform: translateY(-1px);
+        }
 
         .nav-toggle {
             display: none;
@@ -131,7 +176,7 @@
 
         /* ── Disclaimer ── */
         .disclaimer {
-            margin-top: 64px;
+            margin-top: 72px;
             background: var(--bg-elevated);
             border-bottom: 1px solid var(--border);
             text-align: center;
@@ -212,7 +257,7 @@
             align-items: center;
             gap: 6px;
             padding: 6px 14px;
-            border-radius: 20px;
+            border-radius: 0;
             font-size: 0.8rem;
             font-weight: 500;
             border: 1px solid var(--border);
@@ -236,6 +281,19 @@
             gap: 16px;
             justify-content: center;
             flex-wrap: wrap;
+        }
+
+        .demo-requirement {
+            max-width: 620px;
+            margin: 14px auto 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .demo-requirement a {
+            color: var(--trust);
+            font-weight: 600;
         }
 
         .btn {
@@ -262,6 +320,93 @@
             transform: translateY(-1px);
             box-shadow: 0 8px 24px rgba(220,38,38,0.25);
         }
+
+        /* HelloFibro-inspired expanding demo CTA */
+        .demo-cta {
+            position: relative;
+            isolation: isolate;
+            justify-content: flex-start;
+            min-height: 50px;
+            padding: 14px 20px 14px 16px;
+            overflow: hidden;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            color: #D5D8DE;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            box-shadow: none;
+        }
+
+        .demo-cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 11px;
+            z-index: -1;
+            width: 35px;
+            height: 35px;
+            transform: translateY(-50%) rotate(45deg);
+            background:
+                linear-gradient(90deg, transparent, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.05) 75%, transparent),
+                var(--cta-red-soft);
+            background-size: 200% 100%, 100% 100%;
+            animation: ctaShimmer 3.2s ease-in-out infinite;
+            transition: left 0.3s ease, width 0.3s ease, height 0.3s ease, transform 0.3s ease, clip-path 0.3s ease;
+        }
+
+        .demo-cta::after {
+            content: '›';
+            position: relative;
+            z-index: 1;
+            margin-left: 2px;
+            font-size: 1rem;
+            line-height: 1;
+            transition: transform 0.25s ease;
+        }
+
+        .demo-cta span,
+        .demo-cta::after {
+            background: var(--cta-metal);
+            background-size: 280% 100%;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: ctaMetal 3.8s ease-in-out infinite;
+        }
+
+        .demo-cta:hover {
+            background: transparent;
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: none;
+        }
+
+        .demo-cta:hover::before {
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: translateY(-50%) rotate(0);
+            clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+            background:
+                linear-gradient(90deg, transparent, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.06) 75%, transparent),
+                var(--cta-red);
+            background-size: 200% 100%, 100% 100%;
+            animation: ctaShimmer 1.4s ease-in-out infinite;
+        }
+
+        .demo-cta:hover span,
+        .demo-cta:hover::after {
+            background: none;
+            color: #fff;
+            -webkit-text-fill-color: #fff;
+            animation: none;
+        }
+
+        .demo-cta:hover::after { transform: translateX(3px); }
 
         .btn-outline {
             background: transparent;
@@ -703,6 +848,10 @@
             flex-wrap: wrap;
         }
 
+        .cta-actions .btn-outline {
+            border-radius: 0;
+        }
+
         /* ── Footer ── */
         .footer {
             padding: 56px 0 40px;
@@ -764,14 +913,24 @@
             .nav-links.open {
                 display: flex;
                 flex-direction: column;
+                align-items: stretch;
                 position: absolute;
-                top: 64px;
+                top: 72px;
                 left: 0;
                 right: 0;
-                background: var(--bg-deep);
+                background: rgba(12,12,12,0.98);
                 border-bottom: 1px solid var(--border);
-                padding: 16px 24px;
-                gap: 12px;
+                padding: 18px 24px 22px;
+                gap: 4px;
+            }
+
+            .nav-links.open a:not(.nav-cta) {
+                display: block;
+                padding: 10px 0;
+            }
+
+            .nav-links.open a:not(.nav-cta)::after {
+                bottom: 5px;
             }
 
             .hero { padding: 96px 0 64px; }
@@ -1302,6 +1461,16 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes ctaShimmer {
+            0%, 100% { background-position: 160% 0, 0 0; }
+            50% { background-position: -60% 0, 0 0; }
+        }
+
+        @keyframes ctaMetal {
+            0%, 100% { background-position: 100% 50%; }
+            50% { background-position: 0 50%; }
+        }
+
         .hero-content > * {
             opacity: 0;
             animation: fadeUp 0.6s ease-out forwards;
@@ -1311,6 +1480,16 @@
         .hero-content > *:nth-child(3) { animation-delay: 0.2s; }
         .hero-content > *:nth-child(4) { animation-delay: 0.3s; }
         .hero-content > *:nth-child(5) { animation-delay: 0.4s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .hero-content > *,
+            .demo-cta::before,
+            .demo-cta span,
+            .demo-cta::after {
+                animation: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1324,9 +1503,8 @@
         <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
         <ul class="nav-links">
             <li><a href="#demo">Demo</a></li>
-            <li><a href="#capabilities">Capabilities</a></li>
+            <li><a href="#capabilities">Platform</a></li>
             <li><a href="#usecases">Use Cases</a></li>
-            <li><a href="#quickstart">Quick Start</a></li>
             <li><a href="https://github.com/leksval/fhirflame">GitHub</a></li>
             <li><a href="https://huggingface.co/spaces/grasant/fhirflame" class="nav-cta">Live Demo</a></li>
         </ul>
@@ -1335,7 +1513,7 @@
 
 <!-- Disclaimer -->
 <div class="disclaimer">
-    <strong>Prototype / MVP</strong> - Technology demonstration for development and testing purposes. Not approved for clinical use or patient data.
+    <strong>Prototype / MVP</strong> - For development and testing with synthetic data only.
 </div>
 
 <!-- Hero -->
@@ -1352,14 +1530,10 @@
             <div class="trust-badges">
                 <span class="trust-badge"><span class="dot dot--red"></span>FHIR R4 / R5</span>
                 <span class="trust-badge"><span class="dot dot--blue"></span>MCP Compatible</span>
-                <span class="trust-badge"><span class="dot dot--green"></span>HL7 Standards</span>
-                <span class="trust-badge"><span class="dot dot--blue"></span>DICOM Support</span>
                 <span class="trust-badge"><span class="dot dot--green"></span>Apache 2.0</span>
             </div>
             <div class="hero-actions">
-                <a href="https://huggingface.co/spaces/grasant/fhirflame" class="btn btn-primary">Try Live Demo</a>
-                <a href="https://github.com/leksval/fhirflame" class="btn btn-outline">View on GitHub</a>
-                <a href="#quickstart" class="btn btn-outline">Quick Start</a>
+                <a href="https://huggingface.co/spaces/grasant/fhirflame" class="btn btn-primary demo-cta" target="_blank" rel="noopener"><span>Try&nbsp;&nbsp;&nbsp;Live Demo</span></a>
             </div>
         </div>
     </div>
@@ -1544,19 +1718,19 @@
             <div class="fd-content">
                 <span class="fd-label fd-label--green">MCP + A2A Protocol</span>
                 <h3 class="fd-title">First-Class Agent Interoperability</h3>
-                <p class="fd-desc">FhirFlame is not just a tool you use manually. It implements the Model Context Protocol so any LLM agent (Claude, GPT, custom) can call its healthcare functions programmatically. The A2A REST API enables system-to-system integration with EHRs, labs, and other services.</p>
+                <p class="fd-desc">FhirFlame implements the Model Context Protocol for programmatic access from Claude, GPT, and custom agents. Its A2A REST API connects EHRs, labs, and other services.</p>
                 <div class="fd-highlights">
                     <div class="fd-highlight">
                         <div class="fd-highlight-icon fd-highlight-icon--green">&#x2713;</div>
-                        <span><strong>process_medical_document()</strong> &mdash; send clinical text, get back structured entities and a validated FHIR bundle in a single call</span>
+                        <span><strong>process_medical_document():</strong> send clinical text and receive structured entities with a validated FHIR bundle in a single call</span>
                     </div>
                     <div class="fd-highlight">
                         <div class="fd-highlight-icon fd-highlight-icon--green">&#x2713;</div>
-                        <span><strong>validate_fhir_bundle()</strong> &mdash; pass any FHIR bundle for R4/R5 compliance scoring with detailed error reporting</span>
+                        <span><strong>validate_fhir_bundle():</strong> submit any FHIR bundle for R4/R5 compliance scoring and detailed error reporting</span>
                     </div>
                     <div class="fd-highlight">
                         <div class="fd-highlight-icon fd-highlight-icon--green">&#x2713;</div>
-                        <span><strong>Agent-to-Agent REST API</strong> &mdash; FastAPI endpoints on port 8000 for synchronous and async document processing, health checks, and job tracking</span>
+                        <span><strong>Agent-to-Agent REST API:</strong> FastAPI endpoints on port 8000 for synchronous and async document processing, health checks, and job tracking</span>
                     </div>
                 </div>
             </div>
@@ -1604,19 +1778,19 @@
                 <div class="fd-highlights">
                     <div class="fd-highlight">
                         <div class="fd-highlight-icon fd-highlight-icon--blue">1</div>
-                        <span><strong>Ollama (Local)</strong> &mdash; CodeLlama 13B running on your machine at zero cost. No API keys, no network calls, full privacy.</span>
+                        <span><strong>Ollama (Local):</strong> CodeLlama 13B runs on your machine at zero cost with local processing and no API key.</span>
                     </div>
                     <div class="fd-highlight">
                         <div class="fd-highlight-icon fd-highlight-icon--blue">2</div>
-                        <span><strong>Modal Labs (L4 GPU)</strong> &mdash; serverless GPU scaling for production. Auto-provisions NVIDIA L4 instances and scales to zero when idle.</span>
+                        <span><strong>Modal Labs (L4 GPU):</strong> serverless GPU scaling for production. It provisions NVIDIA L4 instances and scales to zero when idle.</span>
                     </div>
                     <div class="fd-highlight">
                         <div class="fd-highlight-icon fd-highlight-icon--blue">3</div>
-                        <span><strong>HuggingFace + Mistral</strong> &mdash; medical-domain models (BioBERT, ClinicalBERT) and multimodal vision OCR for scanned documents.</span>
+                        <span><strong>HuggingFace + Mistral:</strong> medical-domain models (BioBERT, ClinicalBERT) and multimodal vision OCR for scanned documents.</span>
                     </div>
                     <div class="fd-highlight">
                         <div class="fd-highlight-icon fd-highlight-icon--blue">&#x21BB;</div>
-                        <span><strong>Automatic Fallback</strong> &mdash; if a provider is unavailable or slow, the router promotes the next-best option without manual intervention.</span>
+                        <span><strong>Automatic Fallback:</strong> the router selects the next available provider when a service is slow or unavailable.</span>
                     </div>
                 </div>
             </div>
@@ -1665,19 +1839,19 @@
             <div class="fd-content">
                 <span class="fd-label fd-label--red">Healthcare Standards</span>
                 <h3 class="fd-title">100% FHIR R4/R5 Compliance</h3>
-                <p class="fd-desc">Every output bundle is validated against official HL7 FHIR schemas. The engine enforces a zero-dummy-data policy &mdash; every resource field maps directly to extracted clinical entities. Bundles are ready for EHR integration without post-processing.</p>
+                <p class="fd-desc">Every output bundle is validated against official HL7 FHIR schemas. A zero-dummy-data policy requires each resource field to map directly to extracted clinical entities. Bundles are ready for EHR integration.</p>
                 <div class="fd-highlights">
                     <div class="fd-highlight">
                         <div class="fd-highlight-icon fd-highlight-icon--red">R4</div>
-                        <span><strong>FHIR R4 + R5 Dual Support</strong> &mdash; generate bundles for either specification version, configurable per request or globally</span>
+                        <span><strong>FHIR R4 + R5 Dual Support:</strong> generate bundles for either specification version, configurable per request or globally</span>
                     </div>
                     <div class="fd-highlight">
                         <div class="fd-highlight-icon fd-highlight-icon--red">&#x2713;</div>
-                        <span><strong>Entity-to-Resource Mapping</strong> &mdash; conditions, medications, vitals, and patient demographics map to Patient, Condition, MedicationStatement, and Observation resources</span>
+                        <span><strong>Entity-to-Resource Mapping:</strong> conditions, medications, vitals, and patient demographics map to Patient, Condition, MedicationStatement, and Observation resources</span>
                     </div>
                     <div class="fd-highlight">
                         <div class="fd-highlight-icon fd-highlight-icon--red">&#x2713;</div>
-                        <span><strong>Healthcare-Professional Validated</strong> &mdash; output quality reviewed by clinical domain experts to ensure semantic correctness</span>
+                        <span><strong>Healthcare-Professional Validated:</strong> clinical domain experts review output quality for semantic correctness</span>
                     </div>
                 </div>
             </div>
@@ -1791,7 +1965,7 @@
                     </div>
                     <h3>Health Tech Startups</h3>
                 </div>
-                <p>Add FHIR-compliant document processing to your product without building a validation engine from scratch. Ship interoperable features faster with the A2A API.</p>
+                <p>Use the A2A API to add FHIR-compliant document processing and ship interoperable features faster.</p>
                 <div class="uc-flow">
                     <span class="uc-flow-step">Your App</span>
                     <span class="uc-flow-arrow">&rarr;</span>
@@ -2136,12 +2310,12 @@ python app.py</pre>
 <section class="cta-section">
     <div class="container">
         <h2>Start Processing Medical Documents Today</h2>
-        <p>Try the live demo instantly, or deploy locally in under 5 minutes with Docker. No API keys required to get started.</p>
+        <p>Try the hosted demo with a free Hugging Face account, or deploy locally in under 5 minutes with Docker.</p>
         <div class="cta-actions">
-            <a href="https://huggingface.co/spaces/grasant/fhirflame" class="btn btn-primary">Try Live Demo</a>
+            <a href="https://huggingface.co/spaces/grasant/fhirflame" class="btn btn-primary demo-cta" target="_blank" rel="noopener"><span>Try&nbsp;&nbsp;&nbsp;Live Demo</span></a>
             <a href="https://github.com/leksval/fhirflame" class="btn btn-outline">View on GitHub</a>
-            <a href="https://leksval.github.io/fhirflame/" class="btn btn-outline">Read Documentation</a>
         </div>
+        <p class="demo-requirement">Sign in to Hugging Face first. Allow 2–3 minutes for the L4 Space to wake after inactivity.</p>
     </div>
 </section>
 
